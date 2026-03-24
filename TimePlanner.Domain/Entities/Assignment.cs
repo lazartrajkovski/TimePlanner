@@ -2,7 +2,7 @@
 
 namespace TimePlanner.Domain.Entities
 {
-    public class Task
+    public class Assignment
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }
