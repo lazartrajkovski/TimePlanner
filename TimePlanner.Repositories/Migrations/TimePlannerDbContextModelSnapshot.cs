@@ -30,30 +30,38 @@ namespace TimePlanner.Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AssignmentName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("EstimatedHours")
-                        .HasColumnType("double precision");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("double precision")
+                        .HasDefaultValue(0.0);
 
                     b.Property<double>("SpentHours")
-                        .HasColumnType("double precision");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("double precision")
+                        .HasDefaultValue(0.0);
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<string>("TaskName")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
@@ -80,7 +88,8 @@ namespace TimePlanner.Repositories.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -101,29 +110,42 @@ namespace TimePlanner.Repositories.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -131,13 +153,13 @@ namespace TimePlanner.Repositories.Migrations
             modelBuilder.Entity("TimePlanner.Domain.Entities.Assignment", b =>
                 {
                     b.HasOne("TimePlanner.Domain.Entities.Category", "Category")
-                        .WithMany("Tasks")
+                        .WithMany("Assignments")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TimePlanner.Domain.Entities.User", "User")
-                        .WithMany("Tasks")
+                        .WithMany("Assignments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -160,14 +182,14 @@ namespace TimePlanner.Repositories.Migrations
 
             modelBuilder.Entity("TimePlanner.Domain.Entities.Category", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("Assignments");
                 });
 
             modelBuilder.Entity("TimePlanner.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Categories");
+                    b.Navigation("Assignments");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }
