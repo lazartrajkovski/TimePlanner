@@ -27,7 +27,7 @@ namespace TimePlanner.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Assignment>> GetByStatus(int userId, TaskState status)
+        public async Task<IEnumerable<Assignment>> GetByStatus(int userId, AssignmentStatus status)
         {
             return await _context.Set<Assignment>()
                 .Where(a => a.UserId == userId && a.Status == status)

@@ -9,8 +9,8 @@ namespace TimePlanner.Domain.Entities
         public int UserId { get; set; }
         public string TaskName { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public TaskType Type { get; set; }
-        public TaskState Status { get; set; } = TaskState.Pending;
+        public AssignmentType Type { get; set; }
+        public AssignmentStatus Status { get; set; } = AssignmentStatus.Pending;
         public double EstimatedHours { get; set; }
         public double SpentHours { get; set; }
         public DateTime? DueDate { get; set; }

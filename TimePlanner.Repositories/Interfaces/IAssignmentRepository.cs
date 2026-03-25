@@ -8,6 +8,6 @@ namespace TimePlanner.Repositories.Interfaces
     {
         Task<IEnumerable<Assignment>> GetByUserId(int userId);
         Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId);
-        Task<IEnumerable<Assignment>> GetByStatus(int userId, TaskState status);
+        Task<IEnumerable<Assignment>> GetByStatus(int userId, AssignmentStatus status);
     }
 }

@@ -9,7 +9,7 @@
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public ICollection<Assignment> Tasks { get; set; } = new List<Assignment>();
+        public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
         public ICollection<Category> Categories { get; set; } = new List<Category>();
     }
 }
