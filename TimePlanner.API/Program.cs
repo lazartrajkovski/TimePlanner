@@ -1,4 +1,5 @@
 using TimePlanner.Repositories;
+using TimePlanner.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddRepositories(builder.Configuration);
+builder.Services.AddServices();
 
 var app = builder.Build();
 

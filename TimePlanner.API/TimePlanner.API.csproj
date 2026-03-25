@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TimePlanner.Repositories\TimePlanner.Repositories.csproj" />
+    <ProjectReference Include="..\TimePlanner.Services\TimePlanner.Services.csproj" />
   </ItemGroup>
 
 </Project>
