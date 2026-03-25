@@ -7,7 +7,7 @@ namespace TimePlanner.Domain.Entities
         public int Id { get; set; }
         public int CategoryId { get; set; }
         public int UserId { get; set; }
-        public string TaskName { get; set; } = string.Empty;
+        public string AssignmentName { get; set; } = string.Empty;
         public string? Description { get; set; }
         public AssignmentType Type { get; set; }
         public AssignmentStatus Status { get; set; } = AssignmentStatus.Pending;
