@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TimePlanner.Repositories.Data;
+using TimePlanner.Repositories.Interfaces;
+using TimePlanner.Repositories.Repositories;
 
 namespace TimePlanner.Repositories
 {
@@ -11,6 +13,10 @@ namespace TimePlanner.Repositories
         {
             services.AddDbContext<TimePlannerDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 
             return services;
         }
