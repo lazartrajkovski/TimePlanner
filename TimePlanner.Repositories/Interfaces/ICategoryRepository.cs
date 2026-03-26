@@ -3,7 +3,7 @@ using TimePlanner.Repositories.Repositories;
 
 namespace TimePlanner.Repositories.Interfaces
 {
-    public interface ICategoryRepository : IRepository<Category>
+    public interface ICategoryRepository : IBaseRepository<Category>
     {
         Task<IEnumerable<Category>> GetByUserId(int userId);
     }

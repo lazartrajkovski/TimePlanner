@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TimePlanner.Repositories.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         protected readonly TimePlannerDbContext _context;
 
-        public Repository(TimePlannerDbContext context)
+        public BaseRepository(TimePlannerDbContext context)
         {
             _context = context;
         }

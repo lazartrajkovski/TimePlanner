@@ -6,7 +6,7 @@ using TimePlanner.Repositories.Interfaces;
 
 namespace TimePlanner.Repositories.Repositories
 {
-    public class AssignmentRepository : Repository<Assignment>, IAssignmentRepository
+    public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepository
     {
         public AssignmentRepository(TimePlannerDbContext context) : base(context)
         {

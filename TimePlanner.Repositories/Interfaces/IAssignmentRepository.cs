@@ -4,7 +4,7 @@ using TimePlanner.Repositories.Repositories;
 
 namespace TimePlanner.Repositories.Interfaces
 {
-    public interface IAssignmentRepository : IRepository<Assignment>
+    public interface IAssignmentRepository : IBaseRepository<Assignment>
     {
         Task<IEnumerable<Assignment>> GetByUserId(int userId);
         Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId);

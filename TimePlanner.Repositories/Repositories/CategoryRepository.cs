@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TimePlanner.Repositories.Repositories
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
         public CategoryRepository(TimePlannerDbContext context) : base(context)
         {

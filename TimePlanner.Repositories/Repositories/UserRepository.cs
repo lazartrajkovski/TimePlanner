@@ -5,7 +5,7 @@ using TimePlanner.Repositories.Interfaces;
 
 namespace TimePlanner.Repositories.Repositories
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
        public UserRepository(TimePlannerDbContext context) : base(context)
        {
