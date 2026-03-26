@@ -3,7 +3,7 @@ using TimePlanner.Domain.Enums;
 
 namespace TimePlanner.Services.Interfaces
 {
-    public interface IAssignmentService : IService<Assignment>
+    public interface IAssignmentService : IBaseService<Assignment>
     {
         Task<IEnumerable<Assignment>> GetByUserId(int userId);
         Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId);

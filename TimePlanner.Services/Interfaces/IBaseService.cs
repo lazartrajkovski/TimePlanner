@@ -1,6 +1,6 @@
 ﻿namespace TimePlanner.Services.Interfaces
 {
-    public interface IService<T>
+    public interface IBaseService<T>
     {
         Task<IEnumerable<T>> GetAll();
         Task<T?> GetById(int id);

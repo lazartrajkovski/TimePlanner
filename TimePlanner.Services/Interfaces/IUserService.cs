@@ -2,7 +2,7 @@
 
 namespace TimePlanner.Services.Interfaces
 {
-    public interface IUserService : IService<User>
+    public interface IUserService : IBaseService<User>
     {
         Task<User?> GetByEmail(string email);
     }
