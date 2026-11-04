@@ -11,7 +11,7 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
     public AssignmentRepository(TimePlannerDbContext context) : base(context)
     {
     }
-    
+
     public async Task<IEnumerable<Assignment>> GetByUserId(int userId)
     {
         return await _context.Set<Assignment>()
@@ -25,7 +25,7 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
             .Where(a => a.CategoryId == categoryId)
             .ToListAsync();
     }
-    
+
     public async Task<IEnumerable<Assignment>> GetByStatus(int userId, AssignmentStatus status)
     {
         return await _context.Set<Assignment>()

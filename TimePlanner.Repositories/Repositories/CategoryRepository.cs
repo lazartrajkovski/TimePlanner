@@ -9,7 +9,6 @@ namespace TimePlanner.Repositories.Repositories
     {
         public CategoryRepository(TimePlannerDbContext context) : base(context)
         {
-
         }
 
         public async Task<IEnumerable<Category>> GetByUserId(int userId)

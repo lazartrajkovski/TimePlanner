@@ -7,10 +7,9 @@ namespace TimePlanner.Repositories.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-       public UserRepository(TimePlannerDbContext context) : base(context)
-       {
-
-       }
+        public UserRepository(TimePlannerDbContext context) : base(context)
+        {
+        }
 
         public async Task<User?> GetByEmail(string email)
         {

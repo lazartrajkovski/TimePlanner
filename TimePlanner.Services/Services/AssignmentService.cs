@@ -18,7 +18,7 @@ public class AssignmentService : BaseService<Assignment>, IAssignmentService
     {
         return await _assignmentRepository.GetByUserId(userId);
     }
-    
+
     public async Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId)
     {
         return await _assignmentRepository.GetByCategoryId(categoryId);

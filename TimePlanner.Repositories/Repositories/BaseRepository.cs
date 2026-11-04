@@ -11,6 +11,7 @@ namespace TimePlanner.Repositories.Repositories
         {
             _context = context;
         }
+
         public async Task<IEnumerable<T>> GetAll()
         {
             return await _context.Set<T>().ToListAsync();
@@ -49,7 +50,5 @@ namespace TimePlanner.Repositories.Repositories
 
             return true;
         }
-
-
     }
 }
