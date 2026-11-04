@@ -1,11 +1,11 @@
-﻿namespace TimePlanner.Domain.Entities
+﻿namespace TimePlanner.Domain.Entities;
+
+public class Category
 {
-    public class Category
-    {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public string CategoryName { get; set; } = string.Empty;
-        public User User { get; set; } = null!;
-        public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
-    }
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public User User { get; set; } = null!;
+    public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 }
