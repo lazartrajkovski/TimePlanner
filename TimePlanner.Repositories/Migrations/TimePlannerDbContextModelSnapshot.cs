@@ -38,6 +38,9 @@ namespace TimePlanner.Repositories.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -47,33 +50,15 @@ namespace TimePlanner.Repositories.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<double>("EstimatedHours")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("double precision")
-                        .HasDefaultValue(0.0);
-
-                    b.Property<double>("SpentHours")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("double precision")
-                        .HasDefaultValue(0.0);
+                    b.Property<DateOnly?>("DueDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Assignments");
                 });
@@ -91,14 +76,52 @@ namespace TimePlanner.Repositories.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "CategoryName")
+                        .IsUnique();
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("TimePlanner.Domain.Entities.TimeEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AssignmentId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("EndedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("\"EndedAt\" IS NULL");
+
+                    b.ToTable("TimeEntries", t =>
+                        {
+                            t.HasCheckConstraint("CK_TimeEntries_EndAfterStart", "\"EndedAt\" IS NULL OR \"EndedAt\" > \"StartedAt\"");
+                        });
                 });
 
             modelBuilder.Entity("TimePlanner.Domain.Entities.User", b =>
@@ -134,6 +157,11 @@ namespace TimePlanner.Repositories.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -158,15 +186,7 @@ namespace TimePlanner.Repositories.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TimePlanner.Domain.Entities.User", "User")
-                        .WithMany("Assignments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TimePlanner.Domain.Entities.Category", b =>
@@ -180,6 +200,30 @@ namespace TimePlanner.Repositories.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TimePlanner.Domain.Entities.TimeEntry", b =>
+                {
+                    b.HasOne("TimePlanner.Domain.Entities.Assignment", "Assignment")
+                        .WithMany("TimeEntries")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TimePlanner.Domain.Entities.User", "User")
+                        .WithMany("TimeEntries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TimePlanner.Domain.Entities.Assignment", b =>
+                {
+                    b.Navigation("TimeEntries");
+                });
+
             modelBuilder.Entity("TimePlanner.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Assignments");
@@ -187,9 +231,9 @@ namespace TimePlanner.Repositories.Migrations
 
             modelBuilder.Entity("TimePlanner.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Assignments");
-
                     b.Navigation("Categories");
+
+                    b.Navigation("TimeEntries");
                 });
 #pragma warning restore 612, 618
         }
