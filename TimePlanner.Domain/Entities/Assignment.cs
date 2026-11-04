@@ -13,4 +13,5 @@ public class Assignment
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? CompletedAt { get; set; }
     public Category Category { get; set; } = null!;
+    public ICollection<TimeEntry> TimeEntries { get; set; } = new List<TimeEntry>();
 }
