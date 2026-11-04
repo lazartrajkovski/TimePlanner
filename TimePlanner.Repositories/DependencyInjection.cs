@@ -17,6 +17,7 @@ namespace TimePlanner.Repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+            services.AddScoped<ITimeEntryRepository, TimeEntryRepository>();
 
             return services;
         }
