@@ -6,5 +6,5 @@ public class TimeEntryResponse
     public int AssignmentId { get; set; }
     public DateTime StartedAt { get; set; }
     public DateTime? EndedAt { get; set; }
-    public int DurationTime { get; set; }
+    public int DurationTime => (int) ((EndedAt ?? DateTime.UtcNow) - StartedAt).TotalSeconds;
 }
