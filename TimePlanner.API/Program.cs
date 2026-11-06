@@ -1,5 +1,7 @@
+using TimePlanner.API.Identity;
 using TimePlanner.Repositories;
 using TimePlanner.Services;
+using TimePlanner.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddRepositories(builder.Configuration);
 builder.Services.AddServices();
+builder.Services.AddScoped<ICurrentUser, DevelopmentCurrentUser>();
 
 var app = builder.Build();
 
