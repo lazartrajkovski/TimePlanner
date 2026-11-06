@@ -15,6 +15,7 @@ namespace TimePlanner.Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAssignmentService, AssignmentService>();
+            services.AddScoped<ITimeEntryService, TimeEntryService>();
 
             return services;
         }
