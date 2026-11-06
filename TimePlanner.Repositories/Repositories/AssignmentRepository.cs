@@ -32,4 +32,12 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
             .Where(a => a.Category.UserId == userId && a.Status == status)
             .ToListAsync();
     }
+
+    public async Task<Assignment?> GetByIdWithCategory(int assignmentId)
+    {
+        return await _context.Set<Assignment>()
+            .Include(a => a.Category)
+            .Where(a => a.Id == assignmentId)
+            .FirstOrDefaultAsync();
+    }
 }
