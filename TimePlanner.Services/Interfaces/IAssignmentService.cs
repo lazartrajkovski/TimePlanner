@@ -1,11 +1,16 @@
-﻿using TimePlanner.Domain.Entities;
-using TimePlanner.Domain.Enums;
+﻿using TimePlanner.Domain.Enums;
+using TimePlanner.Services.DTOs;
 
 namespace TimePlanner.Services.Interfaces;
 
-public interface IAssignmentService : IBaseService<Assignment>
+public interface IAssignmentService
 {
-    Task<IEnumerable<Assignment>> GetByUserId(int userId);
-    Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId);
-    Task<IEnumerable<Assignment>> GetByStatus(int userId, AssignmentStatus status);
+    Task<AssignmentResponse> Add(AssignmentRequest request);
+    Task<IEnumerable<AssignmentResponse>> GetAll();
+    Task<AssignmentResponse> GetById(int id);
+    Task<AssignmentResponse> Update(int id, AssignmentRequest request);
+    Task<AssignmentResponse> ChangeStatus(int id, AssignmentStatus status);
+    Task Delete(int id);
+    Task<IEnumerable<AssignmentResponse>> GetByCategoryId(int categoryId);
+    Task<IEnumerable<AssignmentResponse>> GetByStatus(AssignmentStatus status);
 }
