@@ -140,9 +140,9 @@ public class AssignmentService : IAssignmentService
         {
             assignment.CompletedAt = null;
         }
-        
+
         assignment.Status = status;
-        
+
         var updatedAssignment = await _assignmentRepository.Update(assignment);
 
         return _mapper.Map<AssignmentResponse>(updatedAssignment);

@@ -12,7 +12,7 @@ public class TimeEntryService : ITimeEntryService
     private readonly IAssignmentRepository _assignmentRepository;
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
-    
+
     public TimeEntryService(ITimeEntryRepository timeEntryRepository, IAssignmentRepository assignmentRepository, ICurrentUser currentUser, IMapper mapper)
     {
         _timeEntryRepository = timeEntryRepository;
@@ -20,7 +20,7 @@ public class TimeEntryService : ITimeEntryService
         _currentUser = currentUser;
         _mapper = mapper;
     }
-    
+
     public async Task<TimeEntryResponse> Start(StartTimeEntryRequest request)
     {
         var assignment = await _assignmentRepository.GetByIdWithCategory(request.AssignmentId);
@@ -29,7 +29,7 @@ public class TimeEntryService : ITimeEntryService
         {
             throw new KeyNotFoundException("Assignment not found");
         }
-        
+
         var runningTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
 
         if (runningTimeEntry is not null)
@@ -43,23 +43,23 @@ public class TimeEntryService : ITimeEntryService
             UserId = _currentUser.UserId,
             StartedAt = DateTime.UtcNow,
         };
-        
+
         var createdTimeEntry = await _timeEntryRepository.Add(timeEntry);
 
-      return _mapper.Map<TimeEntryResponse>(createdTimeEntry);
+        return _mapper.Map<TimeEntryResponse>(createdTimeEntry);
     }
 
     public async Task<TimeEntryResponse> Stop()
     {
         var timeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
-        
+
         if (timeEntry is null)
         {
             throw new KeyNotFoundException("No time entry is currently running");
         }
-        
+
         timeEntry.EndedAt = DateTime.UtcNow;
-        
+
         timeEntry = await _timeEntryRepository.Update(timeEntry);
 
         return _mapper.Map<TimeEntryResponse>(timeEntry);
@@ -87,7 +87,7 @@ public class TimeEntryService : ITimeEntryService
         }
 
         var timeEntries = await _timeEntryRepository.GetByAssignmentId(assignmentId);
-        
+
         return _mapper.Map<IEnumerable<TimeEntryResponse>>(timeEntries);
     }
 }

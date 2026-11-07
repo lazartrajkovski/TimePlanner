@@ -71,7 +71,7 @@ namespace TimePlanner.Services.Services
             category.CategoryName = request.CategoryName.Trim();
 
             var updatedCategory = await _categoryRepository.Update(category);
-            
+
 
             return _mapper.Map<CategoryResponse>(updatedCategory);
         }
@@ -84,7 +84,7 @@ namespace TimePlanner.Services.Services
             {
                 throw new KeyNotFoundException("Category not found");
             }
-            
+
             await _categoryRepository.Delete(id);
         }
 

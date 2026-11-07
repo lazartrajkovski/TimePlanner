@@ -10,7 +10,7 @@ public class TimeEntryRepository : BaseRepository<TimeEntry>, ITimeEntryReposito
     public TimeEntryRepository(TimePlannerDbContext context) : base(context)
     {
     }
-    
+
     public async Task<TimeEntry?> GetRunningByUserId(int userId)
     {
         return await _context.Set<TimeEntry>()
