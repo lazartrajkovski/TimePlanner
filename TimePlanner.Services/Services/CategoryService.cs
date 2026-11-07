@@ -1,21 +1,98 @@
-﻿using TimePlanner.Domain.Entities;
+﻿using MapsterMapper;
+using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
+using TimePlanner.Services.DTOs;
 using TimePlanner.Services.Interfaces;
 
 namespace TimePlanner.Services.Services
 {
-    public class CategoryService : BaseService<Category>, ICategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICurrentUser _currentUser;
+        private readonly IMapper _mapper;
 
-        public CategoryService(ICategoryRepository categoryRepository) : base(categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, ICurrentUser currentUser, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _currentUser = currentUser;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Category>> GetByUserId(int userId)
+        public async Task<CategoryResponse> Add(CategoryRequest request)
         {
-            return await _categoryRepository.GetByUserId(userId);
+            if (string.IsNullOrWhiteSpace(request.CategoryName))
+            {
+                throw new ArgumentException("Category name is required");
+            }
+
+            var category = _mapper.Map<Category>(request);
+            category.CategoryName = request.CategoryName.Trim();
+            category.UserId = _currentUser.UserId;
+
+            var createdCategory = await _categoryRepository.Add(category);
+
+            return _mapper.Map<CategoryResponse>(createdCategory);
+        }
+
+        public async Task<IEnumerable<CategoryResponse>> GetAll()
+        {
+            var categories = await _categoryRepository.GetByUserId(_currentUser.UserId);
+
+            return _mapper.Map<IEnumerable<CategoryResponse>>(categories);
+        }
+
+        public async Task<CategoryResponse> GetById(int id)
+        {
+            var category = await _categoryRepository.GetById(id);
+
+            if (category is null || category.UserId != _currentUser.UserId)
+            {
+                throw new KeyNotFoundException("Category not found");
+            }
+
+            return _mapper.Map<CategoryResponse>(category);
+        }
+
+        public async Task<CategoryResponse> Update(int id, CategoryRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.CategoryName))
+            {
+                throw new ArgumentException("Category name is required");
+            }
+
+            var category = await _categoryRepository.GetById(id);
+
+            if (category is null || category.UserId != _currentUser.UserId)
+            {
+                throw new KeyNotFoundException("Category not found");
+            }
+
+            category.CategoryName = request.CategoryName.Trim();
+
+            var updatedCategory = await _categoryRepository.Update(category);
+            
+
+            return _mapper.Map<CategoryResponse>(updatedCategory);
+        }
+
+        public async Task Delete(int id)
+        {
+            var category = await _categoryRepository.GetById(id);
+
+            if (category is null || category.UserId != _currentUser.UserId)
+            {
+                throw new KeyNotFoundException("Category not found");
+            }
+            
+            await _categoryRepository.Delete(id);
+        }
+
+        public async Task<IEnumerable<CategoryResponse>> GetByUserId(int userId)
+        {
+            var categories = await _categoryRepository.GetByUserId(userId);
+
+            return _mapper.Map<IEnumerable<CategoryResponse>>(categories);
         }
     }
 }
