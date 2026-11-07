@@ -17,6 +17,7 @@ builder.Services.Configure<JwtSettings>(
 builder.Services.AddRepositories(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddScoped<ICurrentUser, DevelopmentCurrentUser>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 var app = builder.Build();
 
