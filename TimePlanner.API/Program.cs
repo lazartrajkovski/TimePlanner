@@ -11,6 +11,9 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection(JwtSettings.SectionName));
+
 builder.Services.AddRepositories(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddScoped<ICurrentUser, DevelopmentCurrentUser>();
