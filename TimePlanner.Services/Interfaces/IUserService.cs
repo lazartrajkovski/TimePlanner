@@ -1,9 +1,10 @@
-﻿using TimePlanner.Domain.Entities;
+﻿using TimePlanner.Services.DTOs;
 
 namespace TimePlanner.Services.Interfaces
 {
-    public interface IUserService : IBaseService<User>
+    public interface IUserService
     {
-        Task<User?> GetByEmail(string email);
+        Task<UserResponse> Register(UserRegisterRequest request);
+        Task<UserResponse> Login(UserLoginRequest request);
     }
 }
