@@ -10,11 +10,18 @@ namespace TimePlanner.Repositories.Repositories
         public UserRepository(TimePlannerDbContext context) : base(context)
         {
         }
-
+        
         public async Task<User?> GetByEmail(string email)
         {
             return await _context.Set<User>()
                 .Where(u => u.Email == email)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<User?> GetByUsername(string username)
+        {
+            return await _context.Set<User>()
+                .Where(u => u.Username == username)
                 .FirstOrDefaultAsync();
         }
     }
