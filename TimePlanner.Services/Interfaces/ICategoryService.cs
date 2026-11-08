@@ -1,5 +1,4 @@
-﻿using TimePlanner.Domain.Entities;
-using TimePlanner.Services.DTOs;
+﻿using TimePlanner.Services.DTOs;
 
 namespace TimePlanner.Services.Interfaces
 {
@@ -10,6 +9,5 @@ namespace TimePlanner.Services.Interfaces
         Task<CategoryResponse> GetById(int id);
         Task<CategoryResponse> Update(int id, CategoryRequest request);
         Task Delete(int id);
-        Task<IEnumerable<CategoryResponse>> GetByUserId(int userId);
     }
 }

@@ -87,12 +87,5 @@ namespace TimePlanner.Services.Services
 
             await _categoryRepository.Delete(id);
         }
-
-        public async Task<IEnumerable<CategoryResponse>> GetByUserId(int userId)
-        {
-            var categories = await _categoryRepository.GetByUserId(userId);
-
-            return _mapper.Map<IEnumerable<CategoryResponse>>(categories);
-        }
     }
 }
