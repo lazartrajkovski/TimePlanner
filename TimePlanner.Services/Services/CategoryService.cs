@@ -25,13 +25,20 @@ namespace TimePlanner.Services.Services
             {
                 throw new ArgumentException("Category name is required");
             }
+            
+            var categoryName = request.CategoryName.Trim();
 
+            if (categoryName.Length > 50)
+            {
+                throw new ArgumentException("Category name is too long");
+            }
+            
             var category = _mapper.Map<Category>(request);
-            category.CategoryName = request.CategoryName.Trim();
+            category.CategoryName = categoryName;
             category.UserId = _currentUser.UserId;
-
+            
             var createdCategory = await _categoryRepository.Add(category);
-
+            
             return _mapper.Map<CategoryResponse>(createdCategory);
         }
 
@@ -60,19 +67,25 @@ namespace TimePlanner.Services.Services
             {
                 throw new ArgumentException("Category name is required");
             }
+            
+            var categoryName = request.CategoryName.Trim();
 
+            if (categoryName.Length > 50)
+            {
+                throw new ArgumentException("Category name is too long");
+            }
+            
             var category = await _categoryRepository.GetById(id);
 
             if (category is null || category.UserId != _currentUser.UserId)
             {
                 throw new KeyNotFoundException("Category not found");
             }
-
-            category.CategoryName = request.CategoryName.Trim();
-
+            
+            category.CategoryName = categoryName;
+            
             var updatedCategory = await _categoryRepository.Update(category);
-
-
+            
             return _mapper.Map<CategoryResponse>(updatedCategory);
         }
 
