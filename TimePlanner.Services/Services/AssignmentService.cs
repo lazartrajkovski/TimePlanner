@@ -27,9 +27,30 @@ public class AssignmentService : IAssignmentService
 
     public async Task<AssignmentResponse> Add(AssignmentRequest request)
     {
+        if (request.CategoryId <= 0)
+        {
+            throw new ArgumentException("Category id must be greater than zero");
+        }
+
         if (string.IsNullOrWhiteSpace(request.AssignmentName))
         {
             throw new ArgumentException("Assignment name is required");
+        }
+
+        var assignmentName = request.AssignmentName.Trim();
+
+        if (assignmentName.Length > 50)
+        {
+            throw new ArgumentException("Assignment name must be 50 characters or fewer");
+        }
+
+        var description = string.IsNullOrWhiteSpace(request.Description)
+            ? null
+            : request.Description.Trim();
+
+        if (description?.Length > 256)
+        {
+            throw new ArgumentException("Assignment description must be 256 characters or fewer");
         }
 
         var category = await _categoryRepository.GetById(request.CategoryId);
@@ -40,7 +61,9 @@ public class AssignmentService : IAssignmentService
         }
 
         var assignment = _mapper.Map<Assignment>(request);
-        assignment.AssignmentName = request.AssignmentName.Trim();
+
+        assignment.AssignmentName = assignmentName;
+        assignment.Description = description;
 
         var createdAssignment = await _assignmentRepository.Add(assignment);
 
@@ -68,9 +91,30 @@ public class AssignmentService : IAssignmentService
 
     public async Task<AssignmentResponse> Update(int id, AssignmentRequest request)
     {
+        if (request.CategoryId <= 0)
+        {
+            throw new ArgumentException("Category id must be greater than zero");
+        }
+
         if (string.IsNullOrWhiteSpace(request.AssignmentName))
         {
             throw new ArgumentException("Assignment name is required");
+        }
+
+        var assignmentName = request.AssignmentName.Trim();
+
+        if (assignmentName.Length > 50)
+        {
+            throw new ArgumentException("Assignment name must be 50 characters or fewer");
+        }
+
+        var description = string.IsNullOrWhiteSpace(request.Description)
+            ? null
+            : request.Description.Trim();
+
+        if (description?.Length > 256)
+        {
+            throw new ArgumentException("Assignment description must be 256 characters or fewer");
         }
 
         var assignment = await _assignmentRepository.GetByIdWithCategory(id);
@@ -88,7 +132,9 @@ public class AssignmentService : IAssignmentService
         }
 
         _mapper.Map(request, assignment);
-        assignment.AssignmentName = request.AssignmentName.Trim();
+
+        assignment.AssignmentName = assignmentName;
+        assignment.Description = description;
 
         var updatedAssignment = await _assignmentRepository.Update(assignment);
 
