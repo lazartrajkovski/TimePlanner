@@ -22,6 +22,8 @@ public class TimeEntryRepository : BaseRepository<TimeEntry>, ITimeEntryReposito
     {
         return await _context.Set<TimeEntry>()
             .Where(e => e.AssignmentId == assignmentId)
+            .AsNoTracking()
+            .OrderByDescending(e => e.StartedAt)
             .ToListAsync();
     }
 }
