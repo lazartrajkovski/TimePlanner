@@ -33,13 +33,13 @@ public class GlobalExceptionHandler : IExceptionHandler
                 ? "An unexpected error has occurred"
                 : exception.Message
         };
-        
+
         httpContext.Response.StatusCode = statusCode;
 
         await httpContext.Response.WriteAsJsonAsync(
             problemDetails,
             cancellationToken);
-        
+
         return true;
     }
 }

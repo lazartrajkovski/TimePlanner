@@ -22,7 +22,7 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
         {
             query = query.Where(a => a.Status == status.Value);
         }
-        
+
         return await query.ToListAsync();
     }
 

@@ -12,7 +12,7 @@ namespace TimePlanner.API.Controllers;
 public class AssignmentController : ControllerBase
 {
     private readonly IAssignmentService _assignmentService;
-    
+
     public AssignmentController(IAssignmentService assignmentService)
     {
         _assignmentService = assignmentService;
@@ -35,7 +35,7 @@ public class AssignmentController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AssignmentResponse>> GetById(int id)
     {
-        var response = await  _assignmentService.GetById(id);
+        var response = await _assignmentService.GetById(id);
         return Ok(response);
     }
 
@@ -54,12 +54,12 @@ public class AssignmentController : ControllerBase
     }
 
     [HttpPatch("{id:int}/status")]
-    public async Task<ActionResult<AssignmentResponse>> UpdateStatus(int id, [FromQuery]AssignmentStatus status)
+    public async Task<ActionResult<AssignmentResponse>> UpdateStatus(int id, [FromQuery] AssignmentStatus status)
     {
         var newStatus = await _assignmentService.ChangeStatus(id, status);
         return Ok(newStatus);
     }
-    
+
     [HttpGet("category/{categoryId:int}")]
     public async Task<ActionResult<IEnumerable<AssignmentResponse>>> GetByCategoryId(int categoryId)
     {

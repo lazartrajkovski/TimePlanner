@@ -76,9 +76,9 @@ public class AssignmentService : IAssignmentService
         {
             throw new ArgumentException("Invalid assignment status");
         }
-        
+
         var assignments = await _assignmentRepository.GetByUserId(_currentUser.UserId, status);
-        
+
         return _mapper.Map<IEnumerable<AssignmentResponse>>(assignments);
     }
 

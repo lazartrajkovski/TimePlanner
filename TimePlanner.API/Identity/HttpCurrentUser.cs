@@ -23,7 +23,7 @@ public class HttpCurrentUser : ICurrentUser
             {
                 throw new UnauthorizedAccessException("No authenticated user");
             }
-            
+
             return userId;
         }
     }
