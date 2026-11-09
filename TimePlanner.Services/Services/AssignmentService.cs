@@ -181,8 +181,6 @@ public class AssignmentService : IAssignmentService
             if (activeTimeEntry is not null && activeTimeEntry.AssignmentId == assignment.Id)
             {
                 activeTimeEntry.EndedAt = completedAt;
-
-                await _timeEntryRepository.Update(activeTimeEntry);
             }
 
             assignment.CompletedAt ??= completedAt;
