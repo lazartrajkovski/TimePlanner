@@ -6,8 +6,7 @@ namespace TimePlanner.Repositories.Interfaces;
 
 public interface IAssignmentRepository : IBaseRepository<Assignment>
 {
-    Task<IEnumerable<Assignment>> GetByUserId(int userId);
+    Task<IEnumerable<Assignment>> GetByUserId(int userId, AssignmentStatus? status);
     Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId);
-    Task<IEnumerable<Assignment>> GetByStatus(int userId, AssignmentStatus status);
     Task<Assignment?> GetByIdWithCategory(int assignmentId);
 }

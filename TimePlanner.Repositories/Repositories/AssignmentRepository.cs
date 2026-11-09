@@ -12,24 +12,25 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
     {
     }
 
-    public async Task<IEnumerable<Assignment>> GetByUserId(int userId)
+    public async Task<IEnumerable<Assignment>> GetByUserId(int userId, AssignmentStatus? status)
     {
-        return await _context.Set<Assignment>()
-            .Where(a => a.Category.UserId == userId)
-            .ToListAsync();
+        var query = _context.Set<Assignment>()
+            .AsNoTracking()
+            .Where(a => a.Category.UserId == userId);
+
+        if (status.HasValue)
+        {
+            query = query.Where(a => a.Status == status.Value);
+        }
+        
+        return await query.ToListAsync();
     }
 
     public async Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId)
     {
         return await _context.Set<Assignment>()
+            .AsNoTracking()
             .Where(a => a.CategoryId == categoryId)
-            .ToListAsync();
-    }
-
-    public async Task<IEnumerable<Assignment>> GetByStatus(int userId, AssignmentStatus status)
-    {
-        return await _context.Set<Assignment>()
-            .Where(a => a.Category.UserId == userId && a.Status == status)
             .ToListAsync();
     }
 

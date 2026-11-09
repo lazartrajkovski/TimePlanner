@@ -70,10 +70,15 @@ public class AssignmentService : IAssignmentService
         return _mapper.Map<AssignmentResponse>(createdAssignment);
     }
 
-    public async Task<IEnumerable<AssignmentResponse>> GetAll()
+    public async Task<IEnumerable<AssignmentResponse>> GetAll(AssignmentStatus? status)
     {
-        var assignments = await _assignmentRepository.GetByUserId(_currentUser.UserId);
-
+        if (status.HasValue && !Enum.IsDefined(status.Value))
+        {
+            throw new ArgumentException("Invalid assignment status");
+        }
+        
+        var assignments = await _assignmentRepository.GetByUserId(_currentUser.UserId, status);
+        
         return _mapper.Map<IEnumerable<AssignmentResponse>>(assignments);
     }
 
@@ -206,12 +211,5 @@ public class AssignmentService : IAssignmentService
         var assignments = await _assignmentRepository.GetByCategoryId(categoryId);
 
         return _mapper.Map<IEnumerable<AssignmentResponse>>(assignments);
-    }
-
-    public async Task<IEnumerable<AssignmentResponse>> GetByStatus(AssignmentStatus status)
-    {
-        var assignmentsByStatus = await _assignmentRepository.GetByStatus(_currentUser.UserId, status);
-
-        return _mapper.Map<IEnumerable<AssignmentResponse>>(assignmentsByStatus);
     }
 }
