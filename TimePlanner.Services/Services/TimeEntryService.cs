@@ -1,5 +1,6 @@
 using MapsterMapper;
 using TimePlanner.Domain.Entities;
+using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs;
 using TimePlanner.Services.Interfaces;
@@ -23,6 +24,11 @@ public class TimeEntryService : ITimeEntryService
 
     public async Task<TimeEntryResponse> Start(StartTimeEntryRequest request)
     {
+        if (request.AssignmentId <= 0)
+        {
+            throw new ArgumentException("AssignmentId must be greater than zero");
+        }
+
         var assignment = await _assignmentRepository.GetByIdWithCategory(request.AssignmentId);
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
@@ -30,11 +36,21 @@ public class TimeEntryService : ITimeEntryService
             throw new KeyNotFoundException("Assignment not found");
         }
 
+        if (assignment.Status == AssignmentStatus.Done)
+        {
+            throw new InvalidOperationException("Assignment is already done");
+        }
+
         var runningTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
 
         if (runningTimeEntry is not null)
         {
             throw new InvalidOperationException("A time entry is already running");
+        }
+
+        if (assignment.Status == AssignmentStatus.Pending)
+        {
+            assignment.Status = AssignmentStatus.InProgress;
         }
 
         var timeEntry = new TimeEntry
@@ -55,7 +71,7 @@ public class TimeEntryService : ITimeEntryService
 
         if (timeEntry is null)
         {
-            throw new KeyNotFoundException("No time entry is currently running");
+            throw new InvalidOperationException("No time entry is currently running");
         }
 
         timeEntry.EndedAt = DateTime.UtcNow;
@@ -69,16 +85,16 @@ public class TimeEntryService : ITimeEntryService
     {
         var timeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
 
-        if (timeEntry is null)
-        {
-            return null;
-        }
-
-        return _mapper.Map<TimeEntryResponse>(timeEntry);
+        return timeEntry is null ? null : _mapper.Map<TimeEntryResponse>(timeEntry);
     }
 
     public async Task<IEnumerable<TimeEntryResponse>> GetByAssignmentId(int assignmentId)
     {
+        if (assignmentId <= 0)
+        {
+            throw new ArgumentException("AssignmentId must be greater than zero");
+        }
+
         var assignment = await _assignmentRepository.GetByIdWithCategory(assignmentId);
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
