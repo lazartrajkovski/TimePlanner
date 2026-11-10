@@ -1,9 +1,11 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TimePlanner.API.ExceptionHandling;
 using TimePlanner.API.Identity;
 using TimePlanner.Repositories;
+using TimePlanner.Repositories.Data;
 using TimePlanner.Services;
 using TimePlanner.Services.Interfaces;
 
@@ -54,6 +56,12 @@ builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 var app = builder.Build();
+
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<TimePlannerDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
 
 app.UseExceptionHandler();
 
