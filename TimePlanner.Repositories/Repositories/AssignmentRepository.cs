@@ -41,4 +41,11 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
             .Where(a => a.Id == assignmentId)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Assignment?> GetByNameAndCategoryId(string assignmentName, int categoryId)
+    {
+        return await _context.Set<Assignment>()
+            .Where(a => a.AssignmentName.ToLower() == assignmentName.ToLower() && a.CategoryId == categoryId)
+            .FirstOrDefaultAsync();
+    }
 }

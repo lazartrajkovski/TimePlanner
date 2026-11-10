@@ -60,6 +60,11 @@ public class AssignmentService : IAssignmentService
             throw new KeyNotFoundException("Category not found");
         }
 
+        if (await _assignmentRepository.GetByNameAndCategoryId(assignmentName, request.CategoryId) is not null)
+        {
+            throw new InvalidOperationException("Assignment with this name already exists");
+        }
+
         var assignment = _mapper.Map<Assignment>(request);
 
         assignment.AssignmentName = assignmentName;
@@ -134,6 +139,13 @@ public class AssignmentService : IAssignmentService
         if (category is null || category.UserId != _currentUser.UserId)
         {
             throw new KeyNotFoundException("Category not found");
+        }
+
+        var existingAssignment = await _assignmentRepository.GetByNameAndCategoryId(assignmentName, request.CategoryId);
+
+        if (existingAssignment is not null && existingAssignment.Id != id)
+        {
+            throw new InvalidOperationException("Assignment with this name already exists");
         }
 
         _mapper.Map(request, assignment);

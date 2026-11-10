@@ -9,4 +9,5 @@ public interface IAssignmentRepository : IBaseRepository<Assignment>
     Task<IEnumerable<Assignment>> GetByUserId(int userId, AssignmentStatus? status);
     Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId);
     Task<Assignment?> GetByIdWithCategory(int assignmentId);
+    Task<Assignment?> GetByNameAndCategoryId(string assignmentName, int categoryId);
 }
