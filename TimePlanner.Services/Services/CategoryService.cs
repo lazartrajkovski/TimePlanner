@@ -33,6 +33,11 @@ namespace TimePlanner.Services.Services
                 throw new ArgumentException("Category name is too long");
             }
 
+            if (await _categoryRepository.GetByNameAndUserId(categoryName, _currentUser.UserId) is not null)
+            {
+                throw new InvalidOperationException("Category with this name already exists");
+            }
+
             var category = _mapper.Map<Category>(request);
             category.CategoryName = categoryName;
             category.UserId = _currentUser.UserId;
@@ -80,6 +85,13 @@ namespace TimePlanner.Services.Services
             if (category is null || category.UserId != _currentUser.UserId)
             {
                 throw new KeyNotFoundException("Category not found");
+            }
+
+            var existingCategory = await _categoryRepository.GetByNameAndUserId(categoryName, _currentUser.UserId);
+
+            if (existingCategory is not null && existingCategory.Id != id)
+            {
+                throw new InvalidOperationException("Category with this name already exists");
             }
 
             category.CategoryName = categoryName;

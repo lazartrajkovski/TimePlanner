@@ -17,5 +17,12 @@ namespace TimePlanner.Repositories.Repositories
                 .Where(c => c.UserId == userId)
                 .ToListAsync();
         }
+
+        public async Task<Category?> GetByNameAndUserId(string categoryName, int userId)
+        {
+            return await _context.Set<Category>()
+                .Where(c => c.UserId == userId && c.CategoryName.ToLower() == categoryName.ToLower())
+                .FirstOrDefaultAsync();
+        }
     }
 }

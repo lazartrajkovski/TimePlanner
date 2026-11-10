@@ -6,5 +6,6 @@ namespace TimePlanner.Repositories.Interfaces
     public interface ICategoryRepository : IBaseRepository<Category>
     {
         Task<IEnumerable<Category>> GetByUserId(int userId);
+        Task<Category?> GetByNameAndUserId(string categoryName, int userId);
     }
 }
