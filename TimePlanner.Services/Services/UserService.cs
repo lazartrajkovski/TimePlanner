@@ -15,7 +15,6 @@ namespace TimePlanner.Services.Services
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly ITokenService _tokenService;
 
-
         public UserService(IUserRepository userRepository, IMapper mapper, IPasswordHasher<User> passwordHasher,
             ITokenService tokenService)
         {
@@ -61,6 +60,7 @@ namespace TimePlanner.Services.Services
         public async Task<UserResponse> Login(UserLoginRequest request)
         {
             UserValidator.ValidateAndNormalize(request);
+
             var user = await _userRepository.GetByUsername(request.Username);
 
             if (user is null)
