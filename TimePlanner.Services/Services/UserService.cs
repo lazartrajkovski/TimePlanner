@@ -4,6 +4,7 @@ using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs;
 using TimePlanner.Services.Interfaces;
+using TimePlanner.Services.Validators;
 
 namespace TimePlanner.Services.Services
 {
@@ -26,32 +27,25 @@ namespace TimePlanner.Services.Services
 
         public async Task<UserResponse> Register(UserRegisterRequest request)
         {
-            var username = request.Username.Trim().ToLowerInvariant();
-            var email = request.Email.Trim().ToLowerInvariant();
-            var timeZoneId = request.TimeZoneId.Trim();
+            UserValidator.ValidateAndNormalize(request);
 
-            if (!TimeZoneInfo.TryFindSystemTimeZoneById(timeZoneId, out _))
-            {
-                throw new ArgumentException("Invalid time zone");
-            }
-
-            if (await _userRepository.GetByUsername(username) is not null)
+            if (await _userRepository.GetByUsername(request.Username) is not null)
             {
                 throw new InvalidOperationException("Username is already taken");
             }
 
-            if (await _userRepository.GetByEmail(email) is not null)
+            if (await _userRepository.GetByEmail(request.Email) is not null)
             {
                 throw new InvalidOperationException("Email is already taken");
             }
 
             var user = new User
             {
-                Username = username,
-                Email = email,
-                FirstName = request.FirstName.Trim(),
-                LastName = request.LastName.Trim(),
-                TimeZoneId = timeZoneId,
+                Username = request.Username,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                TimeZoneId = request.TimeZoneId,
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
@@ -66,8 +60,8 @@ namespace TimePlanner.Services.Services
 
         public async Task<UserResponse> Login(UserLoginRequest request)
         {
-            var username = request.Username.Trim().ToLowerInvariant();
-            var user = await _userRepository.GetByUsername(username);
+            UserValidator.ValidateAndNormalize(request);
+            var user = await _userRepository.GetByUsername(request.Username);
 
             if (user is null)
             {
