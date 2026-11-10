@@ -30,7 +30,7 @@ namespace TimePlanner.Services.Services
 
             if (categoryName.Length > 50)
             {
-                throw new ArgumentException("Category name is too long");
+                throw new ArgumentException("Category name must be 50 characters or fewer");
             }
 
             if (await _categoryRepository.GetByNameAndUserId(categoryName, _currentUser.UserId) is not null)
@@ -77,7 +77,7 @@ namespace TimePlanner.Services.Services
 
             if (categoryName.Length > 50)
             {
-                throw new ArgumentException("Category name is too long");
+                throw new ArgumentException("Category name must be 50 characters or fewer");
             }
 
             var category = await _categoryRepository.GetById(id);
