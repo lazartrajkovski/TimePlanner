@@ -5,6 +5,7 @@ services:
       dockerfile: TimePlanner.API/Dockerfile
     image: timeplanner-api
     restart: unless-stopped
+    mem_limit: 512m
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
@@ -19,6 +20,7 @@ services:
   postgres:
     image: postgres:18
     restart: unless-stopped
+    mem_limit: 1g
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
