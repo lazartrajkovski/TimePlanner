@@ -1,3 +1,4 @@
+using TimePlanner.Domain.Entities;
 using TimePlanner.Domain.Enums;
 using TimePlanner.Services.DTOs;
 
@@ -36,5 +37,21 @@ public static class AssignmentValidator
         }
 
         return TextInput.Required(assignmentDescription, "Assignment description", 256);
+    }
+
+    public static void EnsureNotArchived(Assignment assignment)
+    {
+        if (assignment.ArchivedAt is not null)
+        {
+            throw new InvalidOperationException("Assignment is archived");
+        }
+    }
+
+    public static void EnsureArchived(Assignment assignment)
+    {
+        if (assignment.ArchivedAt is null)
+        {
+            throw new InvalidOperationException("Assignment is not archived");
+        }
     }
 }

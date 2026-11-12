@@ -81,6 +81,8 @@ public class AssignmentService : IAssignmentService
             throw new KeyNotFoundException("Assignment not found");
         }
 
+        AssignmentValidator.EnsureNotArchived(assignment);
+
         var category = await _categoryRepository.GetById(request.CategoryId);
 
         if (category is null || category.UserId != _currentUser.UserId)
@@ -124,6 +126,8 @@ public class AssignmentService : IAssignmentService
         {
             throw new KeyNotFoundException("Assignment not found");
         }
+
+        AssignmentValidator.EnsureNotArchived(assignment);
 
         if (status == AssignmentStatus.Done)
         {
@@ -173,10 +177,7 @@ public class AssignmentService : IAssignmentService
             throw new KeyNotFoundException("Assignment not found");
         }
 
-        if (assignment.ArchivedAt is not null)
-        {
-            throw new InvalidOperationException("Assignment is archived");
-        }
+        AssignmentValidator.EnsureNotArchived(assignment);
 
         var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
 
@@ -206,10 +207,7 @@ public class AssignmentService : IAssignmentService
             throw new KeyNotFoundException("Assignment not found");
         }
 
-        if (assignment.ArchivedAt is null)
-        {
-            throw new InvalidOperationException("Assignment is not archived");
-        }
+        AssignmentValidator.EnsureArchived(assignment);
 
         assignment.ArchivedAt = null;
 

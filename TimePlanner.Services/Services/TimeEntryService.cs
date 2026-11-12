@@ -4,6 +4,7 @@ using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs;
 using TimePlanner.Services.Interfaces;
+using TimePlanner.Services.Validators;
 
 namespace TimePlanner.Services.Services;
 
@@ -35,6 +36,8 @@ public class TimeEntryService : ITimeEntryService
         {
             throw new KeyNotFoundException("Assignment not found");
         }
+
+        AssignmentValidator.EnsureNotArchived(assignment);
 
         if (assignment.Status == AssignmentStatus.Done)
         {
