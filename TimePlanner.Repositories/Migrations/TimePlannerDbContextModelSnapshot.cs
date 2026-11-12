@@ -30,6 +30,9 @@ namespace TimePlanner.Repositories.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("ArchivedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("AssignmentName")
                         .IsRequired()
                         .HasMaxLength(50)

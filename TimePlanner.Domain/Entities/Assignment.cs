@@ -12,6 +12,7 @@ public class Assignment
     public DateOnly? DueDate { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? CompletedAt { get; set; }
+    public DateTime? ArchivedAt { get; set; }
     public Category Category { get; set; } = null!;
     public ICollection<TimeEntry> TimeEntries { get; set; } = new List<TimeEntry>();
 }
