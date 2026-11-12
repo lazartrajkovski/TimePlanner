@@ -80,4 +80,11 @@ public class AssignmentController : ControllerBase
         var archivedAssignments = await _assignmentService.GetArchivedByUserId();
         return Ok(archivedAssignments);
     }
+
+    [HttpPatch("{id:int}/restore")]
+    public async Task<ActionResult<AssignmentResponse>> Restore(int id)
+    {
+        var restoredAssignment = await _assignmentService.Restore(id);
+        return Ok(restoredAssignment);
+    }
 }

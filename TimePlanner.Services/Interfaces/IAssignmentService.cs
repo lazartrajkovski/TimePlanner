@@ -14,4 +14,5 @@ public interface IAssignmentService
     Task Archive(int id);
     Task<IEnumerable<AssignmentResponse>> GetByCategoryId(int categoryId);
     Task<IEnumerable<AssignmentResponse>> GetArchivedByUserId();
+    Task<AssignmentResponse> Restore(int id);
 }

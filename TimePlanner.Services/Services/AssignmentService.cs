@@ -196,4 +196,25 @@ public class AssignmentService : IAssignmentService
 
         return _mapper.Map<IEnumerable<AssignmentResponse>>(archivedAssignments);
     }
+
+    public async Task<AssignmentResponse> Restore(int id)
+    {
+        var assignment = await _assignmentRepository.GetByIdWithCategory(id);
+
+        if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
+        {
+            throw new KeyNotFoundException("Assignment not found");
+        }
+
+        if (assignment.ArchivedAt is null)
+        {
+            throw new InvalidOperationException("Assignment is not archived");
+        }
+
+        assignment.ArchivedAt = null;
+
+        await _assignmentRepository.Update(assignment);
+
+        return _mapper.Map<AssignmentResponse>(assignment);
+    }
 }
