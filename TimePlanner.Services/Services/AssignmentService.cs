@@ -163,4 +163,37 @@ public class AssignmentService : IAssignmentService
 
         return _mapper.Map<IEnumerable<AssignmentResponse>>(assignments);
     }
+
+    public async Task Archive(int id)
+    {
+        var assignment = await _assignmentRepository.GetByIdWithCategory(id);
+
+        if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
+        {
+            throw new KeyNotFoundException("Assignment not found");
+        }
+
+        if (assignment.ArchivedAt is not null)
+        {
+            throw new InvalidOperationException("Assignment is archived");
+        }
+
+        var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
+
+        if (activeTimeEntry is not null && activeTimeEntry.AssignmentId == id)
+        {
+            throw new InvalidOperationException("Cannot archive an assignment with an active time entry");
+        }
+
+        assignment.ArchivedAt = DateTime.UtcNow;
+
+        await _assignmentRepository.Update(assignment);
+    }
+
+    public async Task<IEnumerable<AssignmentResponse>> GetArchivedByUserId()
+    {
+        var archivedAssignments = await _assignmentRepository.GetArchivedByUserId(_currentUser.UserId);
+
+        return _mapper.Map<IEnumerable<AssignmentResponse>>(archivedAssignments);
+    }
 }

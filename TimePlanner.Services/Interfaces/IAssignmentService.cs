@@ -11,5 +11,7 @@ public interface IAssignmentService
     Task<AssignmentResponse> Update(int id, AssignmentRequest request);
     Task<AssignmentResponse> ChangeStatus(int id, AssignmentStatus status);
     Task Delete(int id);
+    Task Archive(int id);
     Task<IEnumerable<AssignmentResponse>> GetByCategoryId(int categoryId);
+    Task<IEnumerable<AssignmentResponse>> GetArchivedByUserId();
 }

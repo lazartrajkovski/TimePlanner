@@ -66,4 +66,18 @@ public class AssignmentController : ControllerBase
         var assignments = await _assignmentService.GetByCategoryId(categoryId);
         return Ok(assignments);
     }
+
+    [HttpPatch("{id:int}/archive")]
+    public async Task<ActionResult> Archive(int id)
+    {
+        await _assignmentService.Archive(id);
+        return NoContent();
+    }
+
+    [HttpGet("archived")]
+    public async Task<ActionResult<IEnumerable<AssignmentResponse>>> GetArchived()
+    {
+        var archivedAssignments = await _assignmentService.GetArchivedByUserId();
+        return Ok(archivedAssignments);
+    }
 }

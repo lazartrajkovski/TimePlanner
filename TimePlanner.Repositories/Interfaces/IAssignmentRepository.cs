@@ -10,4 +10,5 @@ public interface IAssignmentRepository : IBaseRepository<Assignment>
     Task<IEnumerable<Assignment>> GetByCategoryId(int categoryId);
     Task<Assignment?> GetByIdWithCategory(int assignmentId);
     Task<Assignment?> GetByNameAndCategoryId(string assignmentName, int categoryId);
+    Task<IEnumerable<Assignment>> GetArchivedByUserId(int userId);
 }

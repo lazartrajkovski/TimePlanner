@@ -16,7 +16,7 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
     {
         var query = _context.Set<Assignment>()
             .AsNoTracking()
-            .Where(a => a.Category.UserId == userId);
+            .Where(a => a.Category.UserId == userId && a.ArchivedAt == null);
 
         if (status.HasValue)
         {
@@ -30,7 +30,7 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
     {
         return await _context.Set<Assignment>()
             .AsNoTracking()
-            .Where(a => a.CategoryId == categoryId)
+            .Where(a => a.CategoryId == categoryId && a.ArchivedAt == null)
             .ToListAsync();
     }
 
@@ -47,5 +47,14 @@ public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepos
         return await _context.Set<Assignment>()
             .Where(a => a.AssignmentName.ToLower() == assignmentName.ToLower() && a.CategoryId == categoryId)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<IEnumerable<Assignment>> GetArchivedByUserId(int userId)
+    {
+        return await _context.Set<Assignment>()
+            .AsNoTracking()
+            .Where(a => a.Category.UserId == userId && a.ArchivedAt != null)
+            .OrderByDescending(a => a.ArchivedAt)
+            .ToListAsync();
     }
 }
