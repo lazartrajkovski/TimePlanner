@@ -5,7 +5,6 @@ using TimePlanner.Domain.Entities;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Services;
 
-
 namespace TimePlanner.Services
 {
     public static class DependencyInjection
@@ -19,7 +18,6 @@ namespace TimePlanner.Services
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAssignmentService, AssignmentService>();
             services.AddScoped<ITimeEntryService, TimeEntryService>();
-
 
             return services;
         }

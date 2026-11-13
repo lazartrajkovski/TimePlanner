@@ -94,7 +94,7 @@ namespace TimePlanner.Services.Services
             {
                 throw new KeyNotFoundException("Category not found");
             }
-            
+
             var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
 
             if (activeTimeEntry is not null)

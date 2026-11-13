@@ -51,6 +51,4 @@ public class CategoryController : ControllerBase
         await _categoryService.Delete(id);
         return NoContent();
     }
-
-
 }
