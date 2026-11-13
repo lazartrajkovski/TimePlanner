@@ -11,12 +11,17 @@ namespace TimePlanner.Services.Services
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly IAssignmentRepository _assignmentRepository;
+        private readonly ITimeEntryRepository _timeEntryRepository;
         private readonly IMapper _mapper;
 
-        public CategoryService(ICategoryRepository categoryRepository, ICurrentUser currentUser, IMapper mapper)
+        public CategoryService(ICategoryRepository categoryRepository, IAssignmentRepository assignmentRepository,
+            ICurrentUser currentUser, ITimeEntryRepository timeEntryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _currentUser = currentUser;
+            _assignmentRepository = assignmentRepository;
+            _timeEntryRepository = timeEntryRepository;
             _mapper = mapper;
         }
 
@@ -88,6 +93,18 @@ namespace TimePlanner.Services.Services
             if (category is null || category.UserId != _currentUser.UserId)
             {
                 throw new KeyNotFoundException("Category not found");
+            }
+            
+            var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
+
+            if (activeTimeEntry is not null)
+            {
+                var activeAssignment = await _assignmentRepository.GetByIdWithCategory(activeTimeEntry.AssignmentId);
+
+                if (activeAssignment is not null && activeAssignment.Category.Id == category.Id)
+                {
+                    throw new InvalidOperationException("Cannot delete an assignment with active time entry");
+                }
             }
 
             await _categoryRepository.Delete(id);
