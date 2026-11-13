@@ -113,6 +113,13 @@ public class AssignmentService : IAssignmentService
             throw new KeyNotFoundException("Assignment not found");
         }
 
+        var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
+
+        if (activeTimeEntry is not null && activeTimeEntry.AssignmentId == assignment.Id)
+        {
+            throw new InvalidOperationException("Cannot delete an assignment with active time entry");
+        }
+
         await _assignmentRepository.Delete(id);
     }
 
