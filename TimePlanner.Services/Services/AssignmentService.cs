@@ -129,11 +129,11 @@ public class AssignmentService : IAssignmentService
 
         AssignmentValidator.EnsureNotArchived(assignment);
 
+        var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
+
         if (status == AssignmentStatus.Done)
         {
             var completedAt = DateTime.UtcNow;
-
-            var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
 
             if (activeTimeEntry is not null && activeTimeEntry.AssignmentId == assignment.Id)
             {
@@ -142,10 +142,19 @@ public class AssignmentService : IAssignmentService
 
             assignment.CompletedAt ??= completedAt;
         }
+        else if (status == AssignmentStatus.Pending)
+        {
+            if (activeTimeEntry is not null && activeTimeEntry.AssignmentId == assignment.Id)
+            {
+                throw new InvalidOperationException("Cannot move an assignment with an active time entry back to Pending");
+            }
+        }
         else
         {
             assignment.CompletedAt = null;
         }
+
+
 
         assignment.Status = status;
 
