@@ -7,4 +7,5 @@ public interface ITimeEntryRepository : IBaseRepository<TimeEntry>
 {
     Task<TimeEntry?> GetRunningByUserId(int userId);
     Task<IEnumerable<TimeEntry>> GetByAssignmentId(int assignmentId);
+    Task<IEnumerable<TimeEntry>> GetByUserIdAndDateRange(int userId, DateTime fromUtc, DateTime toUtc);
 }

@@ -26,4 +26,13 @@ public class TimeEntryRepository : BaseRepository<TimeEntry>, ITimeEntryReposito
             .OrderByDescending(e => e.StartedAt)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<TimeEntry>> GetByUserIdAndDateRange(int userId, DateTime fromUtc, DateTime toUtc)
+    {
+        return await _context.Set<TimeEntry>()
+            .Where(e => e.UserId  == userId && e.StartedAt < toUtc &&
+                        (e.EndedAt == null || e.EndedAt > fromUtc))
+            .OrderBy(e => e.StartedAt)
+            .ToListAsync();
+    }
 }
