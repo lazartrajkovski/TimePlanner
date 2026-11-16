@@ -1,4 +1,3 @@
-using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs;
 using TimePlanner.Services.Helpers;
@@ -30,6 +29,7 @@ public class StatisticsService : IStatisticsService
         {
             throw new ArgumentException("User not found");
         }
+
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
 
         var utcNow = DateTime.UtcNow;
@@ -43,32 +43,12 @@ public class StatisticsService : IStatisticsService
 
         foreach (var timeEntry in timeEntries)
         {
-            totalTrackedSeconds += GetTrackedSeconds(timeEntry, range.StartUtc, range.EndUtc, utcNow);
+            totalTrackedSeconds += StatisticsCalculator.GetTrackedSeconds(timeEntry, range, utcNow);
         }
 
         return new StatisticsResponse
         {
             TotalTrackedTime = totalTrackedSeconds
         };
-    }
-
-    private static long GetTrackedSeconds(TimeEntry timeEntry, DateTime rangeStartUtc, DateTime rangeEndUtc, DateTime utcNow)
-    {
-        var countedStart = timeEntry.StartedAt < rangeStartUtc
-            ? rangeStartUtc
-            : timeEntry.StartedAt;
-
-        var entryEnd = timeEntry.EndedAt ?? utcNow;
-
-        var countedEnd = entryEnd > rangeEndUtc
-            ? rangeEndUtc
-            : entryEnd;
-
-        if (countedEnd <= countedStart)
-        {
-            return 0;
-        }
-
-        return (long)(countedEnd - countedStart).TotalSeconds;
     }
 }

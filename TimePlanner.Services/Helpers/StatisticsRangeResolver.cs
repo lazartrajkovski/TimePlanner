@@ -11,62 +11,53 @@ public static class StatisticsRangeResolver
         var userLocalTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, userTimeZone);
         var userLocalDate = DateOnly.FromDateTime(userLocalTime);
 
-        DateOnly rangeStartDate;
-        DateOnly rangeEndDate = userLocalDate;
+        if (request.Period == StatisticsPeriod.Custom)
+        {
+            var customStartDate = request.From!.Value;
+            var customEndDate = request.To!.Value;
 
-        if (request.Period == StatisticsPeriod.Daily)
-        {
-            rangeStartDate = userLocalDate;
-            rangeEndDate = userLocalDate;
-        }
-        else if (request.Period == StatisticsPeriod.Weekly)
-        {
-            var weekStartDate = userLocalDate;
+            StatisticsValidator.EnsureNotInFuture(customEndDate, userLocalDate);
 
-            while (weekStartDate.DayOfWeek != DayOfWeek.Monday)
-            {
-                weekStartDate = weekStartDate.AddDays(-1);
-            }
-
-            rangeStartDate = weekStartDate;
-        }
-        else if (request.Period == StatisticsPeriod.Monthly)
-        {
-            rangeStartDate = new DateOnly(
-                userLocalDate.Year,
-                userLocalDate.Month,
-                1);
-        }
-        else if (request.Period == StatisticsPeriod.Last7Days)
-        {
-            rangeStartDate = userLocalDate.AddDays(-6);
-        }
-        else if (request.Period == StatisticsPeriod.Last30Days)
-        {
-            rangeStartDate = userLocalDate.AddDays(-29);
-        }
-        else if (request.Period == StatisticsPeriod.Custom)
-        {
-            rangeStartDate = request.From!.Value;
-            rangeEndDate = request.To!.Value;
-
-            StatisticsValidator.EnsureNotInFuture(rangeEndDate, userLocalDate);
-        }
-        else
-        {
-            throw new ArgumentException("Invalid statistics period");
+            return ConvertToUtcRange(customStartDate, customEndDate, userTimeZone);
         }
 
-        var localDayStart = rangeStartDate.ToDateTime(TimeOnly.MinValue);
-        var localDayEnd = rangeEndDate.AddDays(1).ToDateTime(TimeOnly.MinValue);
+        var rangeStartDate = request.Period switch
+        {
+            StatisticsPeriod.Daily => userLocalDate,
+            StatisticsPeriod.Weekly => GetWeekStartDate(userLocalDate),
+            StatisticsPeriod.Monthly => new DateOnly(userLocalDate.Year, userLocalDate.Month, 1),
+            StatisticsPeriod.Last7Days => userLocalDate.AddDays(-6),
+            StatisticsPeriod.Last30Days => userLocalDate.AddDays(-29),
+            _ => throw new ArgumentException("Invalid statistics period")
+        };
 
-        var utcDayStart = TimeZoneInfo.ConvertTimeToUtc(localDayStart, userTimeZone);
-        var utcDayEnd = TimeZoneInfo.ConvertTimeToUtc(localDayEnd, userTimeZone);
+        return ConvertToUtcRange(rangeStartDate, userLocalDate, userTimeZone);
+    }
+
+    private static DateOnly GetWeekStartDate(DateOnly userLocalDate)
+    {
+        var weekStartDate = userLocalDate;
+
+        while (weekStartDate.DayOfWeek != DayOfWeek.Monday)
+        {
+            weekStartDate = weekStartDate.AddDays(-1);
+        }
+
+        return weekStartDate;
+    }
+
+    private static StatisticsRange ConvertToUtcRange(DateOnly rangeStartDate, DateOnly rangeEndDate, TimeZoneInfo userTimeZone)
+    {
+        var localRangeStart = rangeStartDate.ToDateTime(TimeOnly.MinValue);
+        var localRangeEnd = rangeEndDate.AddDays(1).ToDateTime(TimeOnly.MinValue);
+
+        var utcRangeStart = TimeZoneInfo.ConvertTimeToUtc(localRangeStart, userTimeZone);
+        var utcRangeEnd = TimeZoneInfo.ConvertTimeToUtc(localRangeEnd, userTimeZone);
 
         return new StatisticsRange
         {
-            StartUtc = utcDayStart,
-            EndUtc = utcDayEnd,
+            StartUtc = utcRangeStart,
+            EndUtc = utcRangeEnd,
         };
     }
 }
