@@ -149,7 +149,7 @@ public class AssignmentService : IAssignmentService
 
             assignment.CompletedAt ??= completedAt;
         }
-        else if (status == AssignmentStatus.Pending)
+        else if (status == AssignmentStatus.ToDo)
         {
             if (activeTimeEntry is not null && activeTimeEntry.AssignmentId == assignment.Id)
             {

@@ -51,7 +51,7 @@ public class TimeEntryService : ITimeEntryService
             throw new InvalidOperationException("A time entry is already running");
         }
 
-        if (assignment.Status == AssignmentStatus.Pending)
+        if (assignment.Status == AssignmentStatus.ToDo)
         {
             assignment.Status = AssignmentStatus.InProgress;
         }

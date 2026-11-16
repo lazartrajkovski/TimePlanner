@@ -8,7 +8,7 @@ public class Assignment
     public int CategoryId { get; set; }
     public string AssignmentName { get; set; } = string.Empty;
     public string? Description { get; set; }
-    public AssignmentStatus Status { get; set; } = AssignmentStatus.Pending;
+    public AssignmentStatus Status { get; set; } = AssignmentStatus.ToDo;
     public DateOnly? DueDate { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? CompletedAt { get; set; }
