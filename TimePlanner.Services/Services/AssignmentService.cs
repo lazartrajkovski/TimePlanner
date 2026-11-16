@@ -153,7 +153,7 @@ public class AssignmentService : IAssignmentService
         {
             if (activeTimeEntry is not null && activeTimeEntry.AssignmentId == assignment.Id)
             {
-                throw new InvalidOperationException("Cannot move an assignment with an active time entry back to Pending");
+                throw new InvalidOperationException("Cannot move an assignment with an active time entry back to To Do");
             }
         }
         else
