@@ -48,12 +48,23 @@ public class StatisticsService : IStatisticsService
             totalTrackedSeconds += StatisticsCalculator.GetTrackedSeconds(timeEntry, range, utcNow);
         }
 
-        var trackedTime = new List<TrackedTimeIntervalResponse>();
-
-        if (interval == StatisticsInterval.Hour)
+        var trackedTime = interval switch
         {
-            trackedTime = StatisticsCalculator.CalculateHourlyTrackedTime(timeEntries, range, utcNow);
-        }
+            StatisticsInterval.Hour =>
+                StatisticsCalculator.CalculateHourlyTrackedTime(
+                    timeEntries,
+                    range,
+                    utcNow),
+
+            StatisticsInterval.Day =>
+                StatisticsCalculator.CalculateDailyTrackedTime(
+                    timeEntries,
+                    range,
+                    userTimeZone,
+                    utcNow),
+
+            _ => throw new ArgumentException("Invalid statistics interval")
+        };
 
         return new StatisticsResponse
         {

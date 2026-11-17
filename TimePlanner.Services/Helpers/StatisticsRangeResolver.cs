@@ -46,7 +46,7 @@ public static class StatisticsRangeResolver
         return weekStartDate;
     }
 
-    private static StatisticsRange ConvertToUtcRange(DateOnly rangeStartDate, DateOnly rangeEndDate, TimeZoneInfo userTimeZone)
+    internal static StatisticsRange ConvertToUtcRange(DateOnly rangeStartDate, DateOnly rangeEndDate, TimeZoneInfo userTimeZone)
     {
         var localRangeStart = rangeStartDate.ToDateTime(TimeOnly.MinValue);
         var localRangeEnd = rangeEndDate.AddDays(1).ToDateTime(TimeOnly.MinValue);

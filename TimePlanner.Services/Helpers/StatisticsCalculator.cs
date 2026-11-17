@@ -61,4 +61,35 @@ public static class StatisticsCalculator
 
         return hourlyTrackedTime;
     }
+
+    public static List<TrackedTimeIntervalResponse> CalculateDailyTrackedTime(IReadOnlyList<TimeEntry> timeEntries,
+        StatisticsRange range, TimeZoneInfo userTimeZone, DateTime utcNow)
+    {
+        var dailyTrackedTime = new List<TrackedTimeIntervalResponse>();
+
+        for (var currentDay = range.StartDate; currentDay <= range.EndDate; currentDay = currentDay.AddDays(1))
+        {
+            // A one-day range has the same inclusive start and end date.
+            var currentDayRange = StatisticsRangeResolver.ConvertToUtcRange(currentDay, currentDay, userTimeZone);
+
+            long dailyTrackedSeconds = 0;
+
+            foreach (var timeEntry in timeEntries)
+            {
+                dailyTrackedSeconds += GetTrackedSeconds(
+                    timeEntry,
+                    currentDayRange,
+                    utcNow);
+            }
+
+            dailyTrackedTime.Add(new TrackedTimeIntervalResponse
+            {
+                StartDate = currentDay,
+                EndDate = currentDay,
+                TrackedSeconds = dailyTrackedSeconds,
+            });
+        }
+
+        return dailyTrackedTime;
+    }
 }
