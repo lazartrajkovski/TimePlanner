@@ -27,7 +27,7 @@ public class TimeEntryRepository : BaseRepository<TimeEntry>, ITimeEntryReposito
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<TimeEntry>> GetByUserIdAndDateRange(int userId, DateTime fromUtc, DateTime toUtc)
+    public async Task<IReadOnlyList<TimeEntry>> GetByUserIdAndDateRange(int userId, DateTime fromUtc, DateTime toUtc)
     {
         return await _context.Set<TimeEntry>()
             .Where(e => e.UserId == userId && e.StartedAt < toUtc &&

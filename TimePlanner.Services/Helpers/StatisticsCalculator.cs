@@ -25,7 +25,7 @@ public static class StatisticsCalculator
         return (long)(countedEnd - countedStart).TotalSeconds;
     }
 
-    public static List<HourlyTrackedTimeResponse> CalculateHourlyTrackedTime(IEnumerable<TimeEntry> timeEntries, StatisticsRange dayRange, DateTime utcNow)
+    public static List<HourlyTrackedTimeResponse> CalculateHourlyTrackedTime(IReadOnlyList<TimeEntry> timeEntries, StatisticsRange dayRange, DateTime utcNow)
     {
         var hourlyTrackedTime = new List<HourlyTrackedTimeResponse>();
 
