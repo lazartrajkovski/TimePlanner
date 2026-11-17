@@ -41,13 +41,6 @@ public class StatisticsService : IStatisticsService
         var timeEntries = await _timeEntryRepository.GetByUserIdAndDateRange(_currentUser.UserId,
            range.StartUtc, range.EndUtc);
 
-        long totalTrackedSeconds = 0;
-
-        foreach (var timeEntry in timeEntries)
-        {
-            totalTrackedSeconds += StatisticsCalculator.GetTrackedSeconds(timeEntry, range, utcNow);
-        }
-
         var trackedTime = interval switch
         {
             StatisticsInterval.Hour =>
@@ -66,6 +59,13 @@ public class StatisticsService : IStatisticsService
 
             _ => throw new ArgumentException("Invalid statistics interval")
         };
+
+        long totalTrackedSeconds = 0;
+
+        foreach (var trackedTimeInterval in trackedTime)
+        {
+            totalTrackedSeconds += trackedTimeInterval.TrackedSeconds;
+        }
 
         return new StatisticsResponse
         {
