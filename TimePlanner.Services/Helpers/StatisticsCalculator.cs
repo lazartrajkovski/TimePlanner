@@ -25,38 +25,50 @@ public static class StatisticsCalculator
         return (long)(countedEnd - countedStart).TotalSeconds;
     }
 
-    public static List<TrackedTimeIntervalResponse> CalculateHourlyTrackedTime(IReadOnlyList<TimeEntry> timeEntries, StatisticsRange dayRange, DateTime utcNow)
+    public static List<TrackedTimeIntervalResponse> CalculateHourlyTrackedTime(IReadOnlyList<TimeEntry> timeEntries, StatisticsRange dayRange, TimeZoneInfo userTimeZone, DateTime utcNow)
     {
+        var trackedSecondsByLocalHour = new long[24];
+
+        // Iterate through the real UTC hours because a local day can have 23, 24 or 25 hours.
+        for (var hourStartUtc = dayRange.StartUtc; hourStartUtc < dayRange.EndUtc; hourStartUtc = hourStartUtc.AddHours(1))
+        {
+            var hourEndUtc = hourStartUtc.AddHours(1);
+
+            if (hourEndUtc > dayRange.EndUtc)
+            {
+                hourEndUtc = dayRange.EndUtc;
+            }
+
+            var hourRange = new StatisticsRange
+            {
+                StartUtc = hourStartUtc,
+                EndUtc = hourEndUtc,
+            };
+
+            var localHour = TimeZoneInfo.ConvertTimeFromUtc(hourStartUtc, userTimeZone).Hour;
+
+            foreach (var timeEntry in timeEntries)
+            {
+                trackedSecondsByLocalHour[localHour] += GetTrackedSeconds(timeEntry, hourRange, utcNow);
+            }
+        }
+
         var hourlyTrackedTime = new List<TrackedTimeIntervalResponse>();
 
         for (var hour = 0; hour < 24; hour++)
         {
-            var startUtc = dayRange.StartUtc.AddHours(hour);
-            var endUtc = dayRange.StartUtc.AddHours(hour + 1);
-
-            var hourRange = new StatisticsRange()
+            if (trackedSecondsByLocalHour[hour] == 0)
             {
-                StartUtc = startUtc,
-                EndUtc = endUtc,
-            };
-
-            long trackedSeconds = 0;
-
-            foreach (var timeEntry in timeEntries)
-            {
-                trackedSeconds += GetTrackedSeconds(timeEntry, hourRange, utcNow);
+                continue;
             }
 
-            if (trackedSeconds > 0)
+            hourlyTrackedTime.Add(new TrackedTimeIntervalResponse
             {
-                hourlyTrackedTime.Add(new TrackedTimeIntervalResponse
-                {
-                    Hour = hour,
-                    TrackedSeconds = trackedSeconds,
-                    StartDate = dayRange.StartDate,
-                    EndDate = dayRange.EndDate,
-                });
-            }
+                StartDate = dayRange.StartDate,
+                EndDate = dayRange.EndDate,
+                Hour = hour,
+                TrackedSeconds = trackedSecondsByLocalHour[hour],
+            });
         }
 
         return hourlyTrackedTime;

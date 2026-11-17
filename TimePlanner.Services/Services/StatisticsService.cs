@@ -54,6 +54,7 @@ public class StatisticsService : IStatisticsService
                 StatisticsCalculator.CalculateHourlyTrackedTime(
                     timeEntries,
                     range,
+                    userTimeZone,
                     utcNow),
 
             StatisticsInterval.Day =>
