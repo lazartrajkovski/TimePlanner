@@ -1,4 +1,5 @@
 using TimePlanner.Domain.Entities;
+using TimePlanner.Services.DTOs;
 
 namespace TimePlanner.Services.Helpers;
 
@@ -22,5 +23,40 @@ public static class StatisticsCalculator
         }
 
         return (long)(countedEnd - countedStart).TotalSeconds;
+    }
+
+    public static List<HourlyTrackedTimeResponse> CalculateHourlyTrackedTime(IEnumerable<TimeEntry> timeEntries, StatisticsRange dayRange, DateTime utcNow)
+    {
+        var hourlyTrackedTime = new List<HourlyTrackedTimeResponse>();
+
+        for (var hour = 0; hour < 24; hour++)
+        {
+            var startUtc = dayRange.StartUtc.AddHours(hour);
+            var endUtc = dayRange.StartUtc.AddHours(hour + 1);
+
+            var hourRange = new StatisticsRange()
+            {
+                StartUtc = startUtc,
+                EndUtc = endUtc,
+            };
+
+            long trackedSeconds = 0;
+
+            foreach (var timeEntry in timeEntries)
+            {
+                trackedSeconds += GetTrackedSeconds(timeEntry, hourRange, utcNow);
+            }
+
+            if (trackedSeconds > 0)
+            {
+                hourlyTrackedTime.Add(new HourlyTrackedTimeResponse
+                {
+                    Hour = hour,
+                    TrackedSeconds = trackedSeconds,
+                });
+            }
+        }
+
+        return hourlyTrackedTime;
     }
 }

@@ -1,3 +1,4 @@
+using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs;
 using TimePlanner.Services.Helpers;
@@ -46,12 +47,20 @@ public class StatisticsService : IStatisticsService
             totalTrackedSeconds += StatisticsCalculator.GetTrackedSeconds(timeEntry, range, utcNow);
         }
 
+        List<HourlyTrackedTimeResponse>? hourlyTrackedTime = null;
+
+        if (request.Period == StatisticsPeriod.Daily)
+        {
+            hourlyTrackedTime = StatisticsCalculator.CalculateHourlyTrackedTime(timeEntries, range, utcNow);
+        }
+
         return new StatisticsResponse
         {
             Period = request.Period,
             RangeStartDate = range.StartDate,
             RangeEndDate = range.EndDate,
-            TotalTrackedSeconds = totalTrackedSeconds
+            TotalTrackedSeconds = totalTrackedSeconds,
+            HourlyTrackedTime = hourlyTrackedTime,
         };
     }
 }
