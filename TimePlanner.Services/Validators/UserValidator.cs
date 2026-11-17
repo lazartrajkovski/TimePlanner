@@ -1,5 +1,5 @@
 using System.Net.Mail;
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.Users;
 
 namespace TimePlanner.Services.Validators;
 

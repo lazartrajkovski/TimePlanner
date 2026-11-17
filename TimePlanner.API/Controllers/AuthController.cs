@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.Users;
 using TimePlanner.Services.Interfaces;
 
 namespace TimePlanner.API.Controllers;

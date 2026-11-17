@@ -1,4 +1,4 @@
-﻿namespace TimePlanner.Services.DTOs;
+﻿namespace TimePlanner.Services.DTOs.Assignments;
 
 public class AssignmentRequest
 {

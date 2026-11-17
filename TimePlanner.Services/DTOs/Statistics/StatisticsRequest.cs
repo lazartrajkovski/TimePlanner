@@ -1,6 +1,6 @@
 using TimePlanner.Domain.Enums;
 
-namespace TimePlanner.Services.DTOs;
+namespace TimePlanner.Services.DTOs.Statistics;
 
 public class StatisticsRequest
 {

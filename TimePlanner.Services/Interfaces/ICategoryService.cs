@@ -1,4 +1,4 @@
-﻿using TimePlanner.Services.DTOs;
+﻿using TimePlanner.Services.DTOs.Categories;
 
 namespace TimePlanner.Services.Interfaces
 {

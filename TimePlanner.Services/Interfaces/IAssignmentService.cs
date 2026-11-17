@@ -1,5 +1,5 @@
 ﻿using TimePlanner.Domain.Enums;
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.Assignments;
 
 namespace TimePlanner.Services.Interfaces;
 

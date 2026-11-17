@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.Users;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Validators;
 

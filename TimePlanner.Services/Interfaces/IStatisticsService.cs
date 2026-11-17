@@ -1,4 +1,4 @@
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.Statistics;
 
 namespace TimePlanner.Services.Interfaces;
 

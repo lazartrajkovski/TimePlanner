@@ -2,7 +2,7 @@ using MapsterMapper;
 using TimePlanner.Domain.Entities;
 using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.TimeEntries;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Validators;
 

@@ -1,4 +1,4 @@
-﻿namespace TimePlanner.Services.DTOs
+﻿namespace TimePlanner.Services.DTOs.Users
 {
     public class UserLoginRequest
     {

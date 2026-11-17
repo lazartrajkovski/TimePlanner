@@ -1,5 +1,5 @@
 using TimePlanner.Domain.Enums;
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.Statistics;
 using TimePlanner.Services.Validators;
 
 namespace TimePlanner.Services.Helpers;

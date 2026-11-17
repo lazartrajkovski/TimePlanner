@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TimePlanner.Services.DTOs;
+using TimePlanner.Services.DTOs.Categories;
 using TimePlanner.Services.Interfaces;
 
 namespace TimePlanner.API.Controllers;
