@@ -48,7 +48,10 @@ public class StatisticsService : IStatisticsService
 
         return new StatisticsResponse
         {
-            TotalTrackedTime = totalTrackedSeconds
+            Period = request.Period,
+            RangeStartDate = range.StartDate,
+            RangeEndDate = range.EndDate,
+            TotalTrackedSeconds = totalTrackedSeconds
         };
     }
 }

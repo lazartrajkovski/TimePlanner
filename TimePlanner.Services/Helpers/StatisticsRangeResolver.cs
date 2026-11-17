@@ -56,6 +56,8 @@ public static class StatisticsRangeResolver
 
         return new StatisticsRange
         {
+            StartDate = rangeStartDate,
+            EndDate = rangeEndDate,
             StartUtc = utcRangeStart,
             EndUtc = utcRangeEnd,
         };
