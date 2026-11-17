@@ -36,6 +36,7 @@ public class StatisticsService : IStatisticsService
         var utcNow = DateTime.UtcNow;
 
         var range = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
+        var interval = StatisticsIntervalResolver.Resolve(request, range);
 
         var timeEntries = await _timeEntryRepository.GetByUserIdAndDateRange(_currentUser.UserId,
            range.StartUtc, range.EndUtc);
@@ -49,7 +50,7 @@ public class StatisticsService : IStatisticsService
 
         var trackedTime = new List<TrackedTimeIntervalResponse>();
 
-        if (request.Period == StatisticsPeriod.Daily)
+        if (interval == StatisticsInterval.Hour)
         {
             trackedTime = StatisticsCalculator.CalculateHourlyTrackedTime(timeEntries, range, utcNow);
         }
@@ -61,6 +62,7 @@ public class StatisticsService : IStatisticsService
             RangeEndDate = range.EndDate,
             TotalTrackedSeconds = totalTrackedSeconds,
             TrackedTime = trackedTime,
+            Interval = interval,
         };
     }
 }
