@@ -104,4 +104,42 @@ public static class StatisticsCalculator
 
         return dailyTrackedTime;
     }
+
+    public static List<TrackedTimeIntervalResponse> CalculateWeeklyTrackedTime(IReadOnlyList<TimeEntry> timeEntries,
+        StatisticsRange range, TimeZoneInfo userTimeZone, DateTime utcNow)
+    {
+        var weeklyTrackedTime = new List<TrackedTimeIntervalResponse>();
+        var weekStartDate = range.StartDate;
+
+        while (weekStartDate <= range.EndDate)
+        {
+            var weekEndDate = weekStartDate;
+            
+            // Move to Sunday or the end of the requested range, whichever comes first.
+            while (weekEndDate.DayOfWeek != DayOfWeek.Sunday && weekEndDate < range.EndDate)
+            {
+                weekEndDate = weekEndDate.AddDays(1);
+            }
+
+            var weekRange = StatisticsRangeResolver.ConvertToUtcRange(weekStartDate, weekEndDate, userTimeZone);
+
+            long weeklyTrackedSeconds = 0;
+
+            foreach (var timeEntry in timeEntries)
+            {
+                weeklyTrackedSeconds += GetTrackedSeconds(timeEntry, weekRange, utcNow);
+            }
+
+            weeklyTrackedTime.Add(new TrackedTimeIntervalResponse
+            {
+                StartDate = weekStartDate,
+                EndDate = weekEndDate,
+                TrackedSeconds = weeklyTrackedSeconds,
+            });
+
+            weekStartDate = weekEndDate.AddDays(1);
+        }
+
+        return weeklyTrackedTime;
+    }
 }

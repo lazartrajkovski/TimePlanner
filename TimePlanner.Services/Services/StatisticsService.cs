@@ -57,6 +57,13 @@ public class StatisticsService : IStatisticsService
                     userTimeZone,
                     utcNow),
 
+            StatisticsInterval.Week =>
+                StatisticsCalculator.CalculateWeeklyTrackedTime(
+                    timeEntries,
+                    range,
+                    userTimeZone,
+                    utcNow),
+
             _ => throw new ArgumentException("Invalid statistics interval")
         };
 
