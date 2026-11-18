@@ -3,4 +3,5 @@
   <Project Path="TimePlanner.Domain/TimePlanner.Domain.csproj" />
   <Project Path="TimePlanner.Repositories/TimePlanner.Repositories.csproj" />
   <Project Path="TimePlanner.Services/TimePlanner.Services.csproj" />
+  <Project Path="TimePlanner.Tests/TimePlanner.Tests.csproj" />
 </Solution>
