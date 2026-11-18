@@ -114,7 +114,7 @@ public static class StatisticsCalculator
         while (weekStartDate <= range.EndDate)
         {
             var weekEndDate = weekStartDate;
-            
+
             // Move to Sunday or the end of the requested range, whichever comes first.
             while (weekEndDate.DayOfWeek != DayOfWeek.Sunday && weekEndDate < range.EndDate)
             {
@@ -141,5 +141,43 @@ public static class StatisticsCalculator
         }
 
         return weeklyTrackedTime;
+    }
+
+    public static List<TrackedTimeIntervalResponse> CalculateMonthlyTrackedTime(IReadOnlyList<TimeEntry> timeEntries,
+        StatisticsRange range, TimeZoneInfo userTimeZone, DateTime utcNow)
+    {
+        var monthlyTrackedTime = new List<TrackedTimeIntervalResponse>();
+        var monthStartDate = range.StartDate;
+
+        while (monthStartDate <= range.EndDate)
+        {
+            var daysInMonth = DateTime.DaysInMonth(monthStartDate.Year, monthStartDate.Month);
+            var monthEndDate = new DateOnly(monthStartDate.Year, monthStartDate.Month, daysInMonth);
+
+            if (monthEndDate > range.EndDate)
+            {
+                monthEndDate = range.EndDate;
+            }
+
+            var monthRange = StatisticsRangeResolver.ConvertToUtcRange(monthStartDate, monthEndDate, userTimeZone);
+
+            long monthlyTrackedSeconds = 0;
+
+            foreach (var timeEntry in timeEntries)
+            {
+                monthlyTrackedSeconds += GetTrackedSeconds(timeEntry, monthRange, utcNow);
+            }
+
+            monthlyTrackedTime.Add(new TrackedTimeIntervalResponse
+            {
+                StartDate = monthStartDate,
+                EndDate = monthEndDate,
+                TrackedSeconds = monthlyTrackedSeconds,
+            });
+
+            monthStartDate = monthEndDate.AddDays(1);
+        }
+
+        return monthlyTrackedTime;
     }
 }

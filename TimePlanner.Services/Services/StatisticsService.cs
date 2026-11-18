@@ -64,6 +64,13 @@ public class StatisticsService : IStatisticsService
                     userTimeZone,
                     utcNow),
 
+            StatisticsInterval.Month =>
+                StatisticsCalculator.CalculateMonthlyTrackedTime(
+                    timeEntries,
+                    range,
+                    userTimeZone,
+                    utcNow),
+
             _ => throw new ArgumentException("Invalid statistics interval")
         };
 
