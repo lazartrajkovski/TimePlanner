@@ -15,7 +15,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -35,7 +34,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -55,7 +53,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -74,11 +71,8 @@ public class StatisticsRangeResolverTests
             Period = StatisticsPeriod.Last7Days,
         };
 
-        var userTimeZone =
-            TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
-        var utcNow = new DateTime(
-            2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
+        var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
+        var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
 
@@ -97,7 +91,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -119,7 +112,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -141,7 +133,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -163,10 +154,7 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
-        var utcNow = new DateTime(
-            2026, 11, 18, 23, 30, 0,
-            DateTimeKind.Utc);
+        var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var exception = Assert.Throws<ArgumentException>(() =>
             StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow));
@@ -183,7 +171,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -204,7 +191,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 10, 25, 12, 0, 0, DateTimeKind.Utc);
 
         var result = StatisticsRangeResolver.GetRangeUtc(request, userTimeZone, utcNow);
@@ -225,7 +211,6 @@ public class StatisticsRangeResolverTests
         };
 
         var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
-
         var utcNow = new DateTime(2026, 11, 18, 23, 30, 0, DateTimeKind.Utc);
 
         var exception = Assert.Throws<ArgumentException>(() =>
