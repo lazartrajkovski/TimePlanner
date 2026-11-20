@@ -486,6 +486,46 @@ public class StatisticsCalculatorTests
     }
 
     [Fact]
+    public void CalculateWeeklyTrackedTime_RangeEndsOnMonday_ReturnsOneDayFinalWeek()
+    {
+        var timeEntries = new List<TimeEntry>
+        {
+            new()
+            {
+                StartedAt = new DateTime(2026, 11, 16, 9, 0, 0, DateTimeKind.Utc),
+                EndedAt = new DateTime(2026, 11, 16, 10, 0, 0, DateTimeKind.Utc),
+            },
+        };
+
+        var range = new StatisticsRange
+        {
+            StartDate = new DateOnly(2026, 11, 9),
+            EndDate = new DateOnly(2026, 11, 16),
+        };
+
+        var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
+        var utcNow = new DateTime(2026, 11, 16, 12, 0, 0, DateTimeKind.Utc);
+
+        var result = StatisticsCalculator.CalculateWeeklyTrackedTime(
+            timeEntries, range, userTimeZone, utcNow);
+
+        Assert.Collection(
+            result,
+            firstWeek =>
+            {
+                Assert.Equal(new DateOnly(2026, 11, 9), firstWeek.StartDate);
+                Assert.Equal(new DateOnly(2026, 11, 15), firstWeek.EndDate);
+                Assert.Equal(0, firstWeek.TrackedSeconds);
+            },
+            secondWeek =>
+            {
+                Assert.Equal(new DateOnly(2026, 11, 16), secondWeek.StartDate);
+                Assert.Equal(new DateOnly(2026, 11, 16), secondWeek.EndDate);
+                Assert.Equal(3600, secondWeek.TrackedSeconds);
+            });
+    }
+
+    [Fact]
     public void CalculateWeeklyTrackedTime_EntryCrossesWeekBoundary_SplitsTimeBetweenWeeks()
     {
         var timeEntries = new List<TimeEntry>
@@ -523,7 +563,7 @@ public class StatisticsCalculatorTests
     }
 
     [Fact]
-    public void CalculateMonthlyTrackedTime_RangeStartsAndEndsMidmonth_ReturnsClippedMonths()
+    public void CalculateMonthlyTrackedTime_RangeStartsAndEndsMidMonth_ReturnsClippedMonths()
     {
         var timeEntries = new List<TimeEntry>
         {
@@ -567,6 +607,46 @@ public class StatisticsCalculatorTests
                 Assert.Equal(new DateOnly(2026, 3, 1), march.StartDate);
                 Assert.Equal(new DateOnly(2026, 3, 10), march.EndDate);
                 Assert.Equal(3600, march.TrackedSeconds);
+            });
+    }
+
+    [Fact]
+    public void CalculateMonthlyTrackedTime_RangeEndsOnFirstDayOfMonth_ReturnsOneDayFinalMonth()
+    {
+        var timeEntries = new List<TimeEntry>
+        {
+            new()
+            {
+                StartedAt = new DateTime(2026, 2, 1, 9, 0, 0, DateTimeKind.Utc),
+                EndedAt = new DateTime(2026, 2, 1, 10, 0, 0, DateTimeKind.Utc),
+            },
+        };
+
+        var range = new StatisticsRange
+        {
+            StartDate = new DateOnly(2026, 1, 15),
+            EndDate = new DateOnly(2026, 2, 1),
+        };
+
+        var userTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Skopje");
+        var utcNow = new DateTime(2026, 2, 1, 12, 0, 0, DateTimeKind.Utc);
+
+        var result = StatisticsCalculator.CalculateMonthlyTrackedTime(
+            timeEntries, range, userTimeZone, utcNow);
+
+        Assert.Collection(
+            result,
+            january =>
+            {
+                Assert.Equal(new DateOnly(2026, 1, 15), january.StartDate);
+                Assert.Equal(new DateOnly(2026, 1, 31), january.EndDate);
+                Assert.Equal(0, january.TrackedSeconds);
+            },
+            february =>
+            {
+                Assert.Equal(new DateOnly(2026, 2, 1), february.StartDate);
+                Assert.Equal(new DateOnly(2026, 2, 1), february.EndDate);
+                Assert.Equal(3600, february.TrackedSeconds);
             });
     }
 
