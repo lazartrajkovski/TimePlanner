@@ -14,7 +14,7 @@ public class StatisticsValidatorTests
             Period = (StatisticsPeriod)999,
         };
 
-        var exception = Assert.Throws<ArgumentException>(() 
+        var exception = Assert.Throws<ArgumentException>(()
             => StatisticsValidator.Validate(request));
 
         Assert.Equal("Invalid statistics period", exception.Message);
@@ -36,7 +36,7 @@ public class StatisticsValidatorTests
                 : null,
         };
 
-        var exception = Assert.Throws<ArgumentException>(() 
+        var exception = Assert.Throws<ArgumentException>(()
             => StatisticsValidator.Validate(request));
 
         Assert.Equal("From and To are required for a custom period", exception.Message);
@@ -67,7 +67,7 @@ public class StatisticsValidatorTests
             To = new DateOnly(2027, 1, 2),
         };
 
-        var exception = Assert.Throws<ArgumentException>(() 
+        var exception = Assert.Throws<ArgumentException>(()
             => StatisticsValidator.Validate(request));
 
         Assert.Equal("Custom period cannot be longer than 366 days", exception.Message);
@@ -83,7 +83,7 @@ public class StatisticsValidatorTests
             To = new DateOnly(2027, 1, 1),
         };
 
-        var exception = Record.Exception(() 
+        var exception = Record.Exception(()
             => StatisticsValidator.Validate(request));
 
         Assert.Null(exception);
@@ -126,7 +126,7 @@ public class StatisticsValidatorTests
         var to = new DateOnly(2026, 11, 19);
         var userLocalDate = new DateOnly(2026, 11, 19);
 
-        var exception = Record.Exception(() 
+        var exception = Record.Exception(()
             => StatisticsValidator.EnsureNotInFuture(to, userLocalDate));
 
         Assert.Null(exception);
@@ -142,7 +142,7 @@ public class StatisticsValidatorTests
             To = new DateOnly(2026, 11, 19),
         };
 
-        var exception = Record.Exception(() 
+        var exception = Record.Exception(()
             => StatisticsValidator.Validate(request));
 
         Assert.Null(exception);
