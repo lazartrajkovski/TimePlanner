@@ -155,6 +155,8 @@ public class AssignmentService : IAssignmentService
             {
                 throw new InvalidOperationException("Cannot move an assignment with an active time entry back to To Do");
             }
+
+            assignment.CompletedAt = null;
         }
         else
         {
