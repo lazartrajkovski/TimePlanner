@@ -103,7 +103,7 @@ namespace TimePlanner.Services.Services
 
                 if (activeAssignment is not null && activeAssignment.Category.Id == category.Id)
                 {
-                    throw new InvalidOperationException("Cannot delete an assignment with active time entry");
+                    throw new InvalidOperationException("Cannot delete a category that contains an assignment with an active time entry");
                 }
             }
 
