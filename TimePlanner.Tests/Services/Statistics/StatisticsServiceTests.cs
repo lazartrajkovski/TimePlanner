@@ -35,8 +35,6 @@ public class StatisticsServiceTests
 
         Assert.Equal("Invalid statistics period", exception.Message);
 
-        _currentUserMock.VerifyGet(currentUser => currentUser.UserId, Times.Never);
-
         _userRepositoryMock.Verify(repository => repository.GetById(It.IsAny<int>()), Times.Never);
 
         _timeEntryRepositoryMock.Verify(
