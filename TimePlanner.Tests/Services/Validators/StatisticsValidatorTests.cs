@@ -2,7 +2,7 @@ using TimePlanner.Domain.Enums;
 using TimePlanner.Services.DTOs.Statistics;
 using TimePlanner.Services.Validators;
 
-namespace TimePlanner.Tests.Services.Statistics;
+namespace TimePlanner.Tests.Services.Validators;
 
 public class StatisticsValidatorTests
 {
