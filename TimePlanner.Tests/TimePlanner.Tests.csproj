@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TimePlanner.API\TimePlanner.API.csproj" />
     <ProjectReference Include="..\TimePlanner.Services\TimePlanner.Services.csproj" />
   </ItemGroup>
 
