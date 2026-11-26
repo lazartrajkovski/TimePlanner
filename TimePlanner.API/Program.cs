@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TimePlanner.API.ExceptionHandling;
@@ -15,6 +16,16 @@ builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields =
+        HttpLoggingFields.RequestMethod |
+        HttpLoggingFields.RequestPath |
+        HttpLoggingFields.ResponseStatusCode |
+        HttpLoggingFields.Duration;
+
+    options.CombineLogs = true;
+});
 
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection(JwtSettings.SectionName));
@@ -63,6 +74,7 @@ var app = builder.Build();
     await dbContext.Database.MigrateAsync();
 }
 
+app.UseHttpLogging();
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
