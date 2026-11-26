@@ -4,6 +4,7 @@ using TimePlanner.Domain.Entities;
 using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.TimeEntries;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Services;
 
@@ -127,7 +128,7 @@ public class TimeEntryServiceTests
     }
 
     [Fact]
-    public async Task Start_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Start_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         var request = new StartTimeEntryRequest
         {
@@ -138,7 +139,7 @@ public class TimeEntryServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _timeEntryService.Start(request));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -149,7 +150,7 @@ public class TimeEntryServiceTests
     }
 
     [Fact]
-    public async Task Start_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Start_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var request = new StartTimeEntryRequest
         {
@@ -178,7 +179,7 @@ public class TimeEntryServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _timeEntryService.Start(request));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -544,20 +545,20 @@ public class TimeEntryServiceTests
     }
 
     [Fact]
-    public async Task GetByAssignmentId_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task GetByAssignmentId_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         _assignmentRepositoryMock
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _timeEntryService.GetByAssignmentId(5));
 
         Assert.Equal("Assignment not found", exception.Message);
     }
 
     [Fact]
-    public async Task GetByAssignmentId_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task GetByAssignmentId_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var assignment = new Assignment
         {
@@ -580,7 +581,7 @@ public class TimeEntryServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _timeEntryService.GetByAssignmentId(5));
 
         Assert.Equal("Assignment not found", exception.Message);

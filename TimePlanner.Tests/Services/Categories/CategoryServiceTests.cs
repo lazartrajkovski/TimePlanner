@@ -3,6 +3,7 @@ using Moq;
 using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.Categories;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Services;
 
@@ -277,7 +278,7 @@ public class CategoryServiceTests
     }
 
     [Fact]
-    public async Task GetById_CategoryDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task GetById_CategoryDoesNotExist_ThrowsNotFoundExceptionException()
     {
         _currentUserMock
             .Setup(currentUser => currentUser.UserId)
@@ -287,7 +288,7 @@ public class CategoryServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync((Category?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _categoryService.GetById(1));
 
         Assert.Equal("Category not found", exception.Message);
@@ -302,7 +303,7 @@ public class CategoryServiceTests
     }
 
     [Fact]
-    public async Task GetById_CategoryBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task GetById_CategoryBelongsToAnotherUser_ThrowsNotFoundExceptionException()
     {
         var category = new Category
         {
@@ -319,7 +320,7 @@ public class CategoryServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync(category);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _categoryService.GetById(1));
 
         Assert.Equal("Category not found", exception.Message);
@@ -437,7 +438,7 @@ public class CategoryServiceTests
     }
 
     [Fact]
-    public async Task Update_CategoryDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Update_CategoryDoesNotExist_ThrowsNotFoundExceptionException()
     {
         var request = new CategoryRequest
         {
@@ -448,7 +449,7 @@ public class CategoryServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync((Category?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _categoryService.Update(1, request));
 
         Assert.Equal("Category not found", exception.Message);
@@ -468,7 +469,7 @@ public class CategoryServiceTests
     }
 
     [Fact]
-    public async Task Update_CategoryBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Update_CategoryBelongsToAnotherUser_ThrowsNotFoundExceptionException()
     {
         var request = new CategoryRequest
         {
@@ -490,7 +491,7 @@ public class CategoryServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync(category);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _categoryService.Update(1, request));
 
         Assert.Equal("Category not found", exception.Message);
@@ -666,13 +667,13 @@ public class CategoryServiceTests
     }
 
     [Fact]
-    public async Task Delete_CategoryDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Delete_CategoryDoesNotExist_ThrowsNotFoundExceptionException()
     {
         _categoryRepositoryMock
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync((Category?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _categoryService.Delete(1));
 
         Assert.Equal("Category not found", exception.Message);
@@ -697,7 +698,7 @@ public class CategoryServiceTests
     }
 
     [Fact]
-    public async Task Delete_CategoryBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Delete_CategoryBelongsToAnotherUser_ThrowsNotFoundExceptionException()
     {
         var category = new Category
         {
@@ -714,7 +715,7 @@ public class CategoryServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync(category);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _categoryService.Delete(1));
 
         Assert.Equal("Category not found", exception.Message);

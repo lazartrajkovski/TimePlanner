@@ -3,6 +3,7 @@ using TimePlanner.Domain.Entities;
 using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.Assignments;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Validators;
 
@@ -34,7 +35,7 @@ public class AssignmentService : IAssignmentService
 
         if (category is null || category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Category not found");
+            throw new NotFoundException("Category not found");
         }
 
         if (await _assignmentRepository.GetByNameAndCategoryId(request.AssignmentName, request.CategoryId) is not null)
@@ -64,7 +65,7 @@ public class AssignmentService : IAssignmentService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         return _mapper.Map<AssignmentResponse>(assignment);
@@ -78,7 +79,7 @@ public class AssignmentService : IAssignmentService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         AssignmentValidator.EnsureNotArchived(assignment);
@@ -87,7 +88,7 @@ public class AssignmentService : IAssignmentService
 
         if (category is null || category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Category not found");
+            throw new NotFoundException("Category not found");
         }
 
         var existingAssignment = await _assignmentRepository.GetByNameAndCategoryId(request.AssignmentName, request.CategoryId);
@@ -110,7 +111,7 @@ public class AssignmentService : IAssignmentService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
@@ -131,7 +132,7 @@ public class AssignmentService : IAssignmentService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         AssignmentValidator.EnsureNotArchived(assignment);
@@ -176,7 +177,7 @@ public class AssignmentService : IAssignmentService
 
         if (category is null || category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Category not found");
+            throw new NotFoundException("Category not found");
         }
 
         var assignments = await _assignmentRepository.GetByCategoryId(categoryId);
@@ -190,7 +191,7 @@ public class AssignmentService : IAssignmentService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         AssignmentValidator.EnsureNotArchived(assignment);
@@ -220,7 +221,7 @@ public class AssignmentService : IAssignmentService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         AssignmentValidator.EnsureArchived(assignment);

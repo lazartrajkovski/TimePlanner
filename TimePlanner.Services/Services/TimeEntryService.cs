@@ -3,6 +3,7 @@ using TimePlanner.Domain.Entities;
 using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.TimeEntries;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Validators;
 
@@ -34,7 +35,7 @@ public class TimeEntryService : ITimeEntryService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         AssignmentValidator.EnsureNotArchived(assignment);
@@ -102,7 +103,7 @@ public class TimeEntryService : ITimeEntryService
 
         if (assignment is null || assignment.Category.UserId != _currentUser.UserId)
         {
-            throw new KeyNotFoundException("Assignment not found");
+            throw new NotFoundException("Assignment not found");
         }
 
         var timeEntries = await _timeEntryRepository.GetByAssignmentId(assignmentId);

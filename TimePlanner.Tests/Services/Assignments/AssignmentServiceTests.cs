@@ -4,6 +4,7 @@ using TimePlanner.Domain.Entities;
 using TimePlanner.Domain.Enums;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.Assignments;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Services;
 
@@ -131,7 +132,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Add_CategoryDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Add_CategoryDoesNotExist_ThrowsNotFoundException()
     {
         var request = new AssignmentRequest
         {
@@ -143,7 +144,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync((Category?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Add(request));
 
         Assert.Equal("Category not found", exception.Message);
@@ -154,7 +155,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Add_CategoryBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Add_CategoryBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var request = new AssignmentRequest
         {
@@ -177,7 +178,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync(category);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Add(request));
 
         Assert.Equal("Category not found", exception.Message);
@@ -348,20 +349,20 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task GetById_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task GetById_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         _assignmentRepositoryMock
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.GetById(5));
 
         Assert.Equal("Assignment not found", exception.Message);
     }
 
     [Fact]
-    public async Task GetById_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task GetById_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var assignment = new Assignment
         {
@@ -384,7 +385,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.GetById(5));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -495,7 +496,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Update_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Update_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         var request = new AssignmentRequest
         {
@@ -507,7 +508,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Update(5, request));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -518,7 +519,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Update_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Update_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var request = new AssignmentRequest
         {
@@ -547,7 +548,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Update(5, request));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -599,7 +600,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Update_CategoryDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Update_CategoryDoesNotExist_ThrowsNotFoundException()
     {
         var request = new AssignmentRequest
         {
@@ -632,7 +633,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetById(2))
             .ReturnsAsync((Category?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Update(5, request));
 
         Assert.Equal("Category not found", exception.Message);
@@ -643,7 +644,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Update_CategoryBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Update_CategoryBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var request = new AssignmentRequest
         {
@@ -683,7 +684,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetById(2))
             .ReturnsAsync(otherUserCategory);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Update(5, request));
 
         Assert.Equal("Category not found", exception.Message);
@@ -868,13 +869,13 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Delete_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Delete_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         _assignmentRepositoryMock
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Delete(5));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -885,7 +886,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Delete_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Delete_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var assignment = new Assignment
         {
@@ -908,7 +909,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Delete(5));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -1084,13 +1085,13 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task ChangeStatus_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task ChangeStatus_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         _assignmentRepositoryMock
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.ChangeStatus(5, AssignmentStatus.Done));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -1101,7 +1102,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task ChangeStatus_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task ChangeStatus_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var assignment = new Assignment
         {
@@ -1124,7 +1125,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.ChangeStatus(5, AssignmentStatus.Done));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -1586,20 +1587,20 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task GetByCategoryId_CategoryDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task GetByCategoryId_CategoryDoesNotExist_ThrowsNotFoundException()
     {
         _categoryRepositoryMock
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync((Category?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.GetByCategoryId(1));
 
         Assert.Equal("Category not found", exception.Message);
     }
 
     [Fact]
-    public async Task GetByCategoryId_CategoryBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task GetByCategoryId_CategoryBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var category = new Category
         {
@@ -1616,7 +1617,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetById(1))
             .ReturnsAsync(category);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.GetByCategoryId(1));
 
         Assert.Equal("Category not found", exception.Message);
@@ -1665,13 +1666,13 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Archive_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Archive_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         _assignmentRepositoryMock
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Archive(5));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -1682,7 +1683,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Archive_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Archive_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var assignment = new Assignment
         {
@@ -1705,7 +1706,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Archive(5));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -1954,13 +1955,13 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Restore_AssignmentDoesNotExist_ThrowsKeyNotFoundException()
+    public async Task Restore_AssignmentDoesNotExist_ThrowsNotFoundException()
     {
         _assignmentRepositoryMock
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync((Assignment?)null);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Restore(5));
 
         Assert.Equal("Assignment not found", exception.Message);
@@ -1971,7 +1972,7 @@ public class AssignmentServiceTests
     }
 
     [Fact]
-    public async Task Restore_AssignmentBelongsToAnotherUser_ThrowsKeyNotFoundException()
+    public async Task Restore_AssignmentBelongsToAnotherUser_ThrowsNotFoundException()
     {
         var originalArchivedAt = new DateTime(2026, 11, 20, 10, 0, 0, DateTimeKind.Utc);
 
@@ -1997,7 +1998,7 @@ public class AssignmentServiceTests
             .Setup(repository => repository.GetByIdWithCategory(5))
             .ReturnsAsync(assignment);
 
-        var exception = await Assert.ThrowsAsync<KeyNotFoundException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => _assignmentService.Restore(5));
 
         Assert.Equal("Assignment not found", exception.Message);

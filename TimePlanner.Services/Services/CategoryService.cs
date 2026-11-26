@@ -2,6 +2,7 @@
 using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.Categories;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Validators;
 
@@ -55,7 +56,7 @@ namespace TimePlanner.Services.Services
 
             if (category is null || category.UserId != _currentUser.UserId)
             {
-                throw new KeyNotFoundException("Category not found");
+                throw new NotFoundException("Category not found");
             }
 
             return _mapper.Map<CategoryResponse>(category);
@@ -69,7 +70,7 @@ namespace TimePlanner.Services.Services
 
             if (category is null || category.UserId != _currentUser.UserId)
             {
-                throw new KeyNotFoundException("Category not found");
+                throw new NotFoundException("Category not found");
             }
 
             var existingCategory = await _categoryRepository.GetByNameAndUserId(request.CategoryName, _currentUser.UserId);
@@ -92,7 +93,7 @@ namespace TimePlanner.Services.Services
 
             if (category is null || category.UserId != _currentUser.UserId)
             {
-                throw new KeyNotFoundException("Category not found");
+                throw new NotFoundException("Category not found");
             }
 
             var activeTimeEntry = await _timeEntryRepository.GetRunningByUserId(_currentUser.UserId);
