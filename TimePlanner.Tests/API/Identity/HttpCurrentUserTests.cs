@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using TimePlanner.API.Identity;
+using TimePlanner.Services.Exceptions;
 
 namespace TimePlanner.Tests.API.Identity;
 
@@ -45,7 +46,7 @@ public class HttpCurrentUserTests
             .Setup(accessor => accessor.HttpContext)
             .Returns(httpContext);
 
-        var exception = Assert.Throws<UnauthorizedAccessException>(
+        var exception = Assert.Throws<UnauthorizedException>(
             () => _currentUser.UserId);
 
         Assert.Equal("No authenticated user", exception.Message);
@@ -65,7 +66,7 @@ public class HttpCurrentUserTests
             .Setup(accessor => accessor.HttpContext)
             .Returns(httpContext);
 
-        var exception = Assert.Throws<UnauthorizedAccessException>(
+        var exception = Assert.Throws<UnauthorizedException>(
             () => _currentUser.UserId);
 
         Assert.Equal("No authenticated user", exception.Message);
@@ -78,7 +79,7 @@ public class HttpCurrentUserTests
             .Setup(accessor => accessor.HttpContext)
             .Returns((HttpContext?)null);
 
-        var exception = Assert.Throws<UnauthorizedAccessException>(
+        var exception = Assert.Throws<UnauthorizedException>(
             () => _currentUser.UserId);
 
         Assert.Equal("No authenticated user", exception.Message);

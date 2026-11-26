@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 
 namespace TimePlanner.API.Identity;
@@ -21,7 +22,7 @@ public class HttpCurrentUser : ICurrentUser
 
             if (!int.TryParse(userIdValue, out var userId))
             {
-                throw new UnauthorizedAccessException("No authenticated user");
+                throw new UnauthorizedException("No authenticated user");
             }
 
             return userId;

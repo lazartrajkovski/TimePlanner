@@ -4,6 +4,7 @@ using Moq;
 using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.Users;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Services;
 
@@ -368,7 +369,7 @@ public class UserServiceTests
             .Setup(repository => repository.GetByUsername("testuser"))
             .ReturnsAsync((User?)null);
 
-        var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(
+        var exception = await Assert.ThrowsAsync<UnauthorizedException>(
             () => _userService.Login(request));
 
         Assert.Equal("Invalid username or password", exception.Message);
@@ -420,7 +421,7 @@ public class UserServiceTests
                 request.Password))
             .Returns(PasswordVerificationResult.Failed);
 
-        var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(
+        var exception = await Assert.ThrowsAsync<UnauthorizedException>(
             () => _userService.Login(request));
 
         Assert.Equal("Invalid username or password", exception.Message);

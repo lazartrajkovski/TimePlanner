@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using TimePlanner.Domain.Entities;
 using TimePlanner.Repositories.Interfaces;
 using TimePlanner.Services.DTOs.Users;
+using TimePlanner.Services.Exceptions;
 using TimePlanner.Services.Interfaces;
 using TimePlanner.Services.Validators;
+
 
 namespace TimePlanner.Services.Services
 {
@@ -65,14 +67,14 @@ namespace TimePlanner.Services.Services
 
             if (user is null)
             {
-                throw new UnauthorizedAccessException("Invalid username or password");
+                throw new UnauthorizedException("Invalid username or password");
             }
 
             var passwordResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
 
             if (passwordResult == PasswordVerificationResult.Failed)
             {
-                throw new UnauthorizedAccessException("Invalid username or password");
+                throw new UnauthorizedException("Invalid username or password");
             }
 
             var response = _mapper.Map<UserResponse>(user);
