@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,14 +24,16 @@ public class GlobalExceptionHandler : IExceptionHandler
             _ => StatusCodes.Status500InternalServerError
         };
 
+        var traceId = Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier;
+
         if (statusCode == StatusCodes.Status500InternalServerError)
         {
             _logger.LogError(
                 exception,
-                "Unhandled exception while processing {Method} {Path}. RequestId: {RequestId}",
+                "Unhandled exception while processing {Method} {Path}. TraceId: {TraceId}",
                 httpContext.Request.Method,
                 httpContext.Request.Path,
-                httpContext.TraceIdentifier);
+                traceId);
         }
 
         var title = statusCode switch
@@ -51,10 +54,7 @@ public class GlobalExceptionHandler : IExceptionHandler
                 : exception.Message
         };
 
-        if (statusCode == StatusCodes.Status500InternalServerError)
-        {
-            problemDetails.Extensions["requestId"] = httpContext.TraceIdentifier;
-        }
+        problemDetails.Extensions.Add("traceId", traceId);
 
         httpContext.Response.StatusCode = statusCode;
 
