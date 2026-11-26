@@ -38,7 +38,7 @@ public class HttpCurrentUserTests
     }
 
     [Fact]
-    public void UserId_NoUserIdClaim_ThrowsUnauthorizedAccessException()
+    public void UserId_NoUserIdClaim_ThrowsUnauthorizedException()
     {
         var httpContext = new DefaultHttpContext();
 
@@ -53,7 +53,7 @@ public class HttpCurrentUserTests
     }
 
     [Fact]
-    public void UserId_NonNumericUserIdClaim_ThrowsUnauthorizedAccessException()
+    public void UserId_NonNumericUserIdClaim_ThrowsUnauthorizedException()
     {
         var httpContext = new DefaultHttpContext
         {
@@ -73,7 +73,7 @@ public class HttpCurrentUserTests
     }
 
     [Fact]
-    public void UserId_NoHttpContext_ThrowsUnauthorizedAccessException()
+    public void UserId_NoHttpContext_ThrowsUnauthorizedException()
     {
         _httpContextAccessorMock
             .Setup(accessor => accessor.HttpContext)
